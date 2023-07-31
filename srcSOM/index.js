@@ -6,7 +6,7 @@ var router =require('../srce/Router/index')
 var cors = require('cors')
 const auth=require('./middleware/auth')
 
-
+//hTwzvWbYRnAeFvD2
 
 
 
@@ -30,13 +30,15 @@ app.use(express.json());
 // })
 
 
-
+  const mongoURL=process.env.MongodbURL + "AMW_PROD_Collection"
+  console.log(mongoURL)
+  // 'mongodb://localhost:27017/nodeapp'
 //DB Connection....
-mongoose.connect('mongodb://localhost:27017/nodeapp', {useNewUrlParser: true});
-var connection = mongoose.connection;
-connection.on('connected', function() {
-    console.log('database is connected successfully');
-});
+// mongoose.connect(mongoURL, {useNewUrlParser: true});
+// var connection = mongoose.connection;
+// connection.on('connected', function() {
+//     console.log('database is connected successfully');
+// });
 
 
 
