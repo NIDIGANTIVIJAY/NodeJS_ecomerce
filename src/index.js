@@ -6,7 +6,7 @@ var router =require('./Router/index')
 var cors = require('cors')
 const auth=require('./middleware/auth')
 
-
+require('dotenv').config()
 
 
 
@@ -30,9 +30,11 @@ app.use(express.json());
 // })
 
 
-
+const mongoURL=process.env.MongodbURL + "AMW_PROD_Collection"
+// console.log(mongoURL)
+//'mongodb://localhost:27017/eshop'
 //DB Connection....
-mongoose.connect('mongodb://localhost:27017/eshop', {useNewUrlParser: true});
+mongoose.connect(mongoURL, {useNewUrlParser: true});
 var connection = mongoose.connection;
 connection.on('connected', function() {
     console.log('database is connected successfully');
@@ -43,10 +45,10 @@ connection.on('connected', function() {
 
 //import of Routes...
 app.use(router)
-
-
+ const port=process.env.PORT || 3000
+  console.log("port",port);
 //Application is started....
-app.listen(3000,()=>{
+app.listen(port,()=>{
   console.log("app is running on 3000")
 })
 
