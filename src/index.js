@@ -30,8 +30,9 @@ app.use(express.json());
 //   res.status(503).send("site is under maintenace")
 // })
 
-
-const mongoURL=process.env.MongodbURL + "AMW_PROD_Collection"
+const mongoURL=process.env.MongodbURL
+console.log(mongoURL)
+//const mongoURL=process.env.MongodbURL + "AMW_PROD_Collection"
 // console.log(mongoURL)
 //'mongodb://localhost:27017/eshop'
 //DB Connection....

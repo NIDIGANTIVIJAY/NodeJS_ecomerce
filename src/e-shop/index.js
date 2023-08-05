@@ -51,7 +51,7 @@ const UserSchema = new mongoose.Schema(
     },
     admin: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     flag:{
       type:Boolean,
@@ -85,19 +85,20 @@ UserSchema.methods.generateAuthToken = async function () {
 
 UserSchema.statics.findByCredentials = async (email, password) => {
   const user = await User.findOne({ email });
-  console.log(email, password, user.password);
+  // console.log(email, password, user.password);
   console.log(user);
   if (!user) {
     //error
     console.log("Email Id is not Found");
-    throw new Error();
+    // throw new Error();
+    return "Email Id is not Found"
   }
   const isMatch = await bycrypt.compare(password, user.password);
   console.log(isMatch);
   if (!isMatch) {
     //error
     console.log("Wrong Password");
-    throw new Error();
+      return "Wrong Password"
   }
   return user;
 };
