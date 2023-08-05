@@ -7,8 +7,10 @@ const jwt=require('jsonwebtoken')
 const auth=async function(req,res,next){
    console.log("in AUth middleware .....",req.header('Authorization'),req.body?.Authorization)
     try{
+         //for frontEnd ...
         const  token= req.body?.Authorization.replace('Bearer ','')
-         
+           //for PostMAn ...
+         //const token=req.header('Authorization').replace('Bearer ','')
         console.log(token)
           const decoded=jwt.verify(token,'Relieffirstonetime')
           console.log(decoded)

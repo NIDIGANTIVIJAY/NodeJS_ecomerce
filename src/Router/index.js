@@ -65,11 +65,19 @@ app.post("/user/login", async (req, res) => {
       req.body.email,
       req.body.password
     );
-    const token = await user.generateAuthToken();
-    console.log(token);
-    res.send({ user });
+      if(user !== "Email Id is not Found" || user  !== "Wrong Password"){
+
+        const token =  user.generateAuthToken;
+        // console.log(token);
+        res.status(200).send({ user });
+      }
+      else{
+        res.status(204).status({user})
+      }
+   
   } catch (e) {
     console.log("SFG", e);
+    res.status(400).send({ e });
   }
 });
 
@@ -249,5 +257,38 @@ var transporter = nodemailer.createTransport({
 
    })
 
+
+   // Edit the Admin Data...
+     app.post('/edit/:id' , async(req,res)=>{
+      console.log(req.params.id)
+    
+    
+      try{
+             const user = await uploadData.findOne({productId:req.params.id});
+              if(user){
+                const newObj = {};
+                for (const [key, value] of Object.entries(req.body)) {
+                  if ( key !== 'productId') {
+                      newObj[key] = value;
+                  }
+                
+                }
+                   let updateValue={$set:newObj}
+                   console.log(updateValue);
+                   const updatedData = await uploadData.findOne({productId:req.params.id}).updateOne(updateValue)
+                 
+                   if(updatedData){
+                    res.send("Data is Updated successfully")
+                   }
+              }else{
+                res.status(500).send("Product is not found")
+              }
+            
+      }catch(e){
+        console.log(e)
+        res.status(504).send("Internal Service Problem")
+      }
+        
+     })
 
 module.exports = app;
