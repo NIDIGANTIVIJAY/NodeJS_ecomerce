@@ -2,17 +2,22 @@ const process=require('process');
 const express =require('express');
 const mongoose = require('mongoose');
 var MongoClient = require('mongodb').MongoClient;
-
+var path=require("path")
 var router =require('./Router/index')
 var cors = require('cors')
 const auth=require('./middleware/auth')
 
+
 require('dotenv').config()
 
-
+console.log(path.join(__dirname, 'views'))
 
 const app = express();
+//To set View engine...
+app.set('views', './views');
+app.set('view engine', 'ejs');
 
+app.use(express.static(path.join(__dirname, "public")));
 
 //cross-Orgin....
 
@@ -30,9 +35,15 @@ app.use(express.json());
 //   res.status(503).send("site is under maintenace")
 // })
 
-const mongoURL=process.env.MongodbURL
-console.log(mongoURL)
+// const mongoURL=process.env.MongodbURL
+
+
+//for prod DB.....
 //const mongoURL=process.env.MongodbURL + "AMW_PROD_Collection"
+ 
+// for Dev DB ....
+const mongoURL='mongodb://localhost:27017/eshop'
+console.log(mongoURL)
 // console.log(mongoURL)
 //'mongodb://localhost:27017/eshop'
 //DB Connection....
@@ -51,7 +62,7 @@ app.use(router)
   console.log("port",port);
 //Application is started....
 app.listen(port,()=>{
-  console.log("app is running on 3000")
+  console.log("app is running on $" + port)
 })
 
 

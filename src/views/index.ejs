@@ -1,0 +1,235 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <% obj.forEach((i)=>{ %>
+    <li><%= i.description %></li>
+
+    <% }) %>
+  </body>
+</html> -->
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMW Quetation</title>
+
+    <style>
+.wrapper{
+    outline: 2px solid;
+    margin: 2rem;
+    padding: 2rem;
+}
+.header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.logotext{
+    font-size: 40px;
+}
+
+.taxtext{
+    font-size: 44px;
+    width: 200px;
+    text-align: center;
+}
+table{
+    font-size: 15px;
+    width: 100%;
+    border-collapse: collapse;
+   
+}
+
+.table1{
+    width: 300px;
+}
+
+.table1 th{
+    width: 50%;
+
+}
+th, td, tr{
+    border: 1px solid #2c2c32;
+    padding: 5px 10px;
+}
+
+.bodytr td{
+    text-align: left;
+}
+
+thead, tfoot{
+    background-color: #9898a5;
+}
+
+
+.tablelast th, .tablelast td{
+    width: 11%;
+}
+
+.trtag tr{
+    border: none;
+}
+    </style>
+</head>
+<body>
+   <div class="wrapper">
+
+    <div class="header">
+        <div><img src="image/amwlogo.png" alt="amwlogo"></div>
+        <div class="logotext"><p>AAKASH METAL WORKS</p></div>
+        <div class="taxtext"><p>Tax Invoice</p></div>
+    </div>
+
+    <div class="header">
+        <p style="font-size: 20px;">AAKASH METAL WORKS <br>
+        [+919936098290], aakashmetalworks@gmail.com <br>
+        108,Chandanpura ,Kopaganj <br>
+        Mau-275305, U.P. <br>
+        Phone : 9936098290 <br>
+        GSTIN : 09AWOPL8307R1ZI</p>
+
+        <div>
+            <div>
+                <table class="table1" style="font-size: 16px;">
+                    <thead>
+                    <tr>
+                        <th>INVOICE NO.</th>
+                        <th>DATE</th>
+                    </tr>
+                </thead>
+                    <tr style="font-weight: bold; text-align: center;">
+                        <td ><span class="invoice">AMW-43/23-24</span> </td>
+                        <td ><span class="date"><%= todayDate %></span> </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <div>
+        <table>
+            <thead>
+              <tr>
+                <th>BILL TO</th>
+                <th>SHIP TO</th>
+              </tr>
+            </thead>
+            <tr class="bodytr">
+                <td> <span style="font-weight: bold;" class="costShopName"> M/S NEW RASARA LOHA BHANDAR </span><br>
+                     <span class="address1"> 0, BHITI </span> <br> 
+                     <span class="addCity"> Mau,</span> <span class="addState"> Uttar Pradesh, </span class="addPincode"> <span>275101 </span><br>
+                     <span style="font-weight: bold;" class="customerContact"> Phone : 9839774567 </span>
+                </td>
+                <td> <span style="font-weight: bold;" class="costShopName"> M/S NEW RASARA LOHA BHANDAR </span><br>
+                    <span class="address1"> 0, BHITI </span> <br> 
+                    <span class="addCity"> Mau,</span> <span class="addState"> Uttar Pradesh, </span class="addPincode"> <span>275101 </span><br>
+                    <span style="font-weight: bold;" class="customerContact"> Phone : 9839774567 </span>
+               </td>
+            </tr>
+        </table>
+    </div>
+
+    <br><br>
+    <div>
+
+        <table class="tablelast" style="text-align: right;">
+            <thead>
+                <tr>
+                <th style="text-align: center; width: 50px;">SL.No.</th>
+                <th style="text-align: center; width: 45%;">Item</th>
+                <th style="text-align: center;">HSN No.</th>
+                <th style="text-align: center; ">Qty. (Kg)</th>
+                <th style="text-align: center; ">Unit Rate</th>
+                <th style="text-align: center; width: 20%;">Amount</th>
+            </tr>
+            </thead>
+            <tbody>
+                  <% obj.forEach((i,index)=>{ %>
+                    <tr>
+                     <td style="text-align: center; width: 50px;"><span class="srno"><%= index+1 %></span></td>
+                     <td style="text-align: center; width: 45%;"><span class="srno"><%= i.product %></span></td>
+                     <td style="text-align: center;"><span class="srno"><%= index %></span></td>
+                     <td style="text-align: center; "><span class="srno"><%= i.quantity %></span></td>
+                     <td style="text-align: center; "><span class="srno">Rs. <%=  i.price %></span></td>
+                     <td style="text-align: center; width: 20%;"><span class="srno">Rs. <%= i.price %></span></td>
+                    </tr>
+                  <% }) %>
+                
+
+                
+            </tbody>
+            <thead>
+                <tr style="text-align: right;">
+                    <th style="text-align: left;">Total</th>
+                    <th colspan="2">Rs.<%= total %> </th>
+                    <th style="text-align: center;"><span class="totalQty">totalQty.</span></th>
+                    <th> <%= totalQuatity %> </th>
+                    <th><span class="totalAmt">totalAmt.</span></th>
+                </tr>
+                
+            </thead>
+            <tbody style="text-align: right;">
+                <tr style="border-bottom: none;">
+                    <th colspan="5">SGST @ 9%</th>
+                    <th><span class="sgst">Rs. <%= stateTax %></span></th>
+                </tr>
+                <tr style="border-top: none;">
+                    <th colspan="5">CGST @ 9%</th>
+                    <th><span class="cgst">Rs.<%= centralTax %></span></th>
+                </tr>
+            </tbody>
+
+            <thead>
+                <tr >
+                    <th style="text-align: left" colspan="3">PAYABLE AMOUNT  <span  style="margin-left: 65%" > RS:<%= GrandTotal %> </span> </th>
+                    <th style="text-align: left;" colspan="5" >TotalAmt-GST   <span style="margin-left: 50%"  > RS: <%= TotalGst %> </span></th>  
+                </tr>
+                <tr><th style="text-align: left;" colspan="6">AMOUNT (In Words) - <span class="inwordAmt"> Thirty Five Thousand Six Hundred Twenty only</span></th></tr>
+            </thead>
+        </table>
+
+    </div>
+
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div><p>M/S Aakash metal Works <br>
+            Bank Name : SBI Kopaganj <br>
+            Current A/c No. 00000041349770864 <br>
+            Branch & IFS Code : Kopaganj & SBIN0003426</p>
+        </div>
+        <div>
+            <p> <span style="margin-left: 20px;">
+                Payments Terms
+            </span > <br>
+            <span style="margin-left: 40px;">
+                1 . 100 % payment against Delivery </span><br>
+                <span style="margin-left: 40px;">
+                2. Freight : To pay Basis</span>
+
+            </p>
+        </div>
+        
+    </div>
+    <div style="border: 1px solid black;">
+        <p style="text-align: center; font-weight: bold;">[+919936098290], aakashmetalworks@gmail.com</p>
+    </div>
+    <div style="background-color: #9898a5; border: 1px solid black;">
+        <p style="text-align: center; font-weight: bold;">We Will Do Our Best, Thank You For Your Business</p>
+    </div>
+
+
+
+   </div>
+</body>
+</html>

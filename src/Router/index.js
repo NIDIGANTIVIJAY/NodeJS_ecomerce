@@ -9,6 +9,7 @@ const userSchema = require("../e-shop/index");
 const uploadData = require("../e-shop/schema/index");
 
 var nodemailer = require('nodemailer');
+const { type } = require("os");
 
 const app = express();
 
@@ -59,7 +60,7 @@ app.post("/signup", async function (request, response) {
 
 // logging the User.....
 app.post("/user/login", async (req, res) => {
-  console.log("in Login", req.body);
+  console.log("in Login", req.body,userSchema);
   try {
     const user = await userSchema.findByCredentials(
       req.body.email,
@@ -67,8 +68,8 @@ app.post("/user/login", async (req, res) => {
     );
       if(user !== "Email Id is not Found" || user  !== "Wrong Password"){
 
-        const token =  user.generateAuthToken;
-        // console.log(token);
+        const token =  user.generateAuthToken();
+         console.log(token,"token");
         res.status(200).send({ user });
       }
       else{
@@ -213,6 +214,7 @@ app.get('/jsonData',async(req,res)=>{
       try{
         
       const user = await uploadData.find({});
+      console.log(user)
         res.send(user)
       }catch(e){
 
@@ -290,5 +292,55 @@ var transporter = nodemailer.createTransport({
       }
         
      })
+
+
+    //Get Quotation Template...
+    app.get('/getquote/:query',async(req,res)=>{
+        console.log(req.params.query,typeof(req.params.query))
+          const productId=req.params.query.split(',')
+          let obj={}
+          const user = await uploadData.find({
+            "productId": { $in: productId }
+        }).
+        then(res => {
+            console.log(res)
+            obj=res
+        });
+
+        console.log(obj,"456")
+        let date=new Date()
+        let dateday=date.getDate()
+        let dateMonth=date.getMonth()
+        let dateYear=date.getFullYear()
+        let todayDate=dateday + '/' + dateMonth + "/" + dateYear;
+        console.log(todayDate)
+        let total="500"
+        let subTotal="485"
+        let stateTax="9"
+        let centralTax="9"
+        let totalQuatity="22"
+        let GrandTotal="518"
+        let TotalGst="18"
+        try{
+          res.render("index",{
+            obj,
+            total,
+            subTotal,
+            totalQuatity,
+            stateTax,
+            centralTax,
+            GrandTotal,
+            TotalGst,
+            todayDate
+         
+          });
+
+        }catch(e){
+
+        }
+
+       
+    })
+
 
 module.exports = app;
