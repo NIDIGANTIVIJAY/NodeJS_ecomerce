@@ -3,6 +3,25 @@ const express =require('express');
 const mongoose = require('mongoose');
 var MongoClient = require('mongodb').MongoClient;
 var path=require("path")
+         
+const app = express();
+
+console.log(path.join(__dirname, "views"))
+//To set View engine...
+app.set('view engine', 'ejs');
+
+app.set('views', path.join(__dirname, 'views'));
+
+app.use(express.static(path.join(__dirname, "public")));
+
+
+
+
+
+
+
+
+
 var router =require('./Router/index')
 var cors = require('cors')
 const auth=require('./middleware/auth')
@@ -12,12 +31,7 @@ require('dotenv').config()
 
 console.log(path.join(__dirname, 'views'))
 
-const app = express();
-//To set View engine...
-app.set('views', './views');
-app.set('view engine', 'ejs');
 
-app.use(express.static(path.join(__dirname, "public")));
 
 //cross-Orgin....
 
@@ -39,6 +53,7 @@ app.use(express.json());
 
 
 //for prod DB.....
+
 const mongoURL=process.env.MongodbURL + "AMW_PROD_Collection"
  
 // for Dev DB ....

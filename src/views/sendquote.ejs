@@ -83,11 +83,6 @@ thead, tfoot{
     </style>
 </head>
 <body>
-  
-
-
-
-
    <div class="wrapper">
 
     <div class="header">
@@ -123,36 +118,6 @@ thead, tfoot{
 
     </div>
 
-    
-
-    <div>
-        <table>
-            <thead>
-              <tr>
-                <th>BILL TO</th>
-                <th>SHIP TO</th>
-              </tr>
-            </thead>
-            <tr class="bodytr">
-                <td>
-                  
-
-
-
-
-                     <span style="font-weight: bold;" class="costShopName"><%= Name %> </span><br>
-                     <span class="address1"> <%= GSTNumber %>  </span> <br> 
-                     <span class="addCity"> Mau,</span> <span class="addState"> Uttar Pradesh, </span class="addPincode"> <span>275101 </span><br>
-                     <span style="font-weight: bold;" class="customerContact"> Phone : 9839774567 </span>
-                </td>
-                <td> <span style="font-weight: bold;" class="costShopName"> M/S NEW RASARA LOHA BHANDAR </span><br>
-                    <span class="address1"> 0, BHITI </span> <br> 
-                    <span class="addCity"> Mau,</span> <span class="addState"> Uttar Pradesh, </span class="addPincode"> <span>275101 </span><br>
-                    <span style="font-weight: bold;" class="customerContact"> Phone : 9839774567 </span>
-               </td>
-            </tr>
-        </table>
-    </div>
 
     <br><br>
     <div>
@@ -179,6 +144,7 @@ thead, tfoot{
                      <td style="text-align: center; width: 20%;"><span class="srno">Rs. <%= Amount[index]  %></span></td>
                     </tr>
                   <% }) %>
+                
                 
 
                 
@@ -245,8 +211,5 @@ thead, tfoot{
 
 
    </div>
-
-
-
 </body>
 </html>
