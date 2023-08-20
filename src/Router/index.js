@@ -452,11 +452,11 @@ app.post('/getquote', async (req, res) => {
 
 //get the input from  the Process Data to store...
 app.post('/savequoteData', async (req, res) => {
-  console.log(req.body, "FGRFRGR")
+  console.log(req.body._id, "FGRFRGR")
   var saveData;
   if (req.body.Status === "Completed") {
-    saveData = await ProcessInvoice.updateOne({ GSTNumber: req.body.GSTNumber }, { $set: { Status: "completed" } } )
-    await ProcessInvoice.updateOne({ GSTNumber: req.body.GSTNumber }, { $set: { AmountPaid: req.body.AmountPaid } }  )
+    saveData = await ProcessInvoice.updateOne({ _id: req.body._id }, { $set: { Status: "completed" } } )
+    await ProcessInvoice.updateOne({  _id: req.body._id }, { $set: { AmountPaid: req.body.AmountPaid } }  )
 
   } else {
 
@@ -523,9 +523,9 @@ app.get("/getpendingquote", async (req, res) => {
 app.post("/removequote", async (req, res) => {
   console.log(req.body, req.body.GST, "DDD")
   try {
-    const data = await ProcessInvoice.deleteOne({ GSTNumber: req.body.GST })
+    const data = await ProcessInvoice.deleteOne({ _id: req.body._id })
 
-    const ProcessInvoiceData = await ProcessInvoice.find({})
+    const ProcessInvoiceData = await ProcessInvoice.find({ Status: "pending" })
     console.log(ProcessInvoiceData, "SSDF")
     res.status(200).send(ProcessInvoiceData)
 
@@ -537,6 +537,22 @@ app.post("/removequote", async (req, res) => {
 
 //editInvoice....
 app.post("/editquote", async (req, res) => {
+  try {
+    
+ const filterOption={
+  _id: req.body._id 
+ }
+ 
+   const UpdatedArray=req.body.InvoiceProduct
+
+   
+    const data = await ProcessInvoice.updateMany(filterOption,{$set:{InvoiceProduct:req.body.InvoiceProduct,GSTNumber:req.body.GSTNumber,Name:req.body.Name} })
+    console.log(data)
+    res.status(200).send("Edited Sucessfully")
+
+  } catch (e) {
+      console.log(e)
+  }
 
 })
 
