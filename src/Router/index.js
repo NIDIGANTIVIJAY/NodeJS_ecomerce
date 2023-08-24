@@ -10,9 +10,10 @@ const uploadData = require("../e-shop/schema/index");
 const ProcessInvoice = require("../e-shop/schema/ProcessInvoice")
 var nodemailer = require('nodemailer');
 const { type } = require("os");
-
+const uuid = require('uuid')
 const app = express();
-
+const AccountData =require("../e-shop/schema/AccountSchema")
+const CustmoreDetailsData=require("../e-shop/schema/customerDetails")
 
 app.use(bodyParser.json());
 console.log("In Routers");
@@ -110,7 +111,7 @@ app.post("/getData", async (req, res) => {
 
 app.post("/upload/data", upload.single("imageData"), async (req, res) => {
   console.log(req);
-
+  const uniqId = uuid.v4()
   let obj = {
     imageData: "",
     description: "",
@@ -120,7 +121,8 @@ app.post("/upload/data", upload.single("imageData"), async (req, res) => {
     size: "",
     weight: "",
     quantity: "",
-    productId: ""
+    productId: "",
+    ProductUniqId: ""
   };
 
   try {
@@ -135,6 +137,8 @@ app.post("/upload/data", upload.single("imageData"), async (req, res) => {
     obj["weight"] = req.body.weight
     obj["quantity"] = req.body.quantity
     obj["productId"] = req.body.productId
+    obj["ProductUniqId"] = uniqId
+
     console.log(obj)
     const user = new uploadData(obj);
     await user.save();
@@ -225,33 +229,6 @@ app.get('/jsonData', async (req, res) => {
 })
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //send Email service..
 
 
@@ -321,6 +298,43 @@ app.post('/edit/:id', async (req, res) => {
 
 })
 
+// Edit the Production Data...
+app.post('/editData', async (req, res) => {
+  console.log(req.body)
+
+
+  try {
+    const filterOption = {
+      _id: req.body._id
+    }
+
+
+
+    const data = await uploadData.updateMany(filterOption,
+      {
+        $set: {
+          productId: req.body.ProductId,
+          description: req.body.Description,
+          price: req.body.Price,
+          item: req.body.Item,
+          product: req.body.Product,
+          size: req.body.Size,
+          weight: req.body.Weight,
+          quantity: req.body.Quantity,
+
+
+        }
+      })
+    console.log(data)
+    res.status(200).send("Edited Sucessfully")
+
+  } catch (e) {
+    console.log(e)
+    res.status(504).send("Internal Service Problem")
+  }
+
+})
+
 
 //Get Quotation Template...
 app.post('/getquote', async (req, res) => {
@@ -356,7 +370,7 @@ app.post('/getquote', async (req, res) => {
 
 
   obj.map((i) => {
-   
+
     let num = Number(i.Price)
     let quanti = Number(i.Quantity)
 
@@ -380,12 +394,15 @@ app.post('/getquote', async (req, res) => {
 
   let GSTNumber;
   let Name;
+  let phonenumber;
+  let address;
   // console.log(req.body)
   if (req?.body?.Status !== "initiate") {
 
     GSTNumber = req.body.GSTNumber
     Name = req.body.Name
-
+    phonenumber=req.body.phonenumber
+    address=req.body.address
   }
 
   console.log(GSTNumber, Name)
@@ -417,7 +434,9 @@ app.post('/getquote', async (req, res) => {
         TotaAmount,
         TotalQuatity,
         GSTNumber,
-        Name
+        Name,
+        phonenumber,
+        address
 
 
 
@@ -443,41 +462,139 @@ app.post('/getquote', async (req, res) => {
     }
 
   } catch (e) {
-    console.log(e)
+    console.log(e, "ONGF")
   }
 
 
 })
 
-
 //get the input from  the Process Data to store...
 app.post('/savequoteData', async (req, res) => {
-  console.log(req.body._id, "FGRFRGR")
+  console.log(req.body, "FGRFRGR")
   var saveData;
+  let processData
+  let DueAmount
+  var AccounData
   if (req.body.Status === "Completed") {
-    saveData = await ProcessInvoice.updateOne({ _id: req.body._id }, { $set: { Status: "completed" } } )
-    await ProcessInvoice.updateOne({  _id: req.body._id }, { $set: { AmountPaid: req.body.AmountPaid } }  )
+
+
+    try {
+      let arr = []
+      var dataArray = req.body.InvoiceProduct
+      for (const data of dataArray) {
+        const subfield = data.ProductUniqId;
+        const second = await uploadData.findOne({ ProductUniqId: subfield })
+        console.log(second, "41")
+        if (second) {
+
+          if (second.quantity >= data.Quantity) {
+            let finalval = second.quantity - data.Quantity
+            console.log("FinalData", finalval)
+            const finalData = await uploadData.updateOne({ ProductUniqId: subfield }, { $set: { quantity: finalval } })
+          }
+          else {
+
+            res.send("Enter Amount Quatity is grater than Product")
+            throw new Error("Enter Amount Quatity is grater than Product")
+          }
+
+        }
+      }
+
+
+
+    } catch (e) {
+      console.log(e)
+    }
+
+
+
+    try {
+
+      processData = await ProcessInvoice.find({ _id: req.body._id })
+      console.log(processData,"&*JUNJJ",processData[0].TotalAmount , req.body. AmountPaid)
+      DueAmount = processData[0].TotalAmount - req.body. AmountPaid
+       
+      console.log(DueAmount,"DueAmount")
+      let AcountObj={}
+      const uniqId = uuid.v4()
+        if(DueAmount === 0){
+          AcountObj["Status"]="completed"
+          AcountObj["GSTNumber"]=req.body.GSTNumber,
+          AcountObj["Name"]= req.body.Name,
+          AcountObj["AmountPaid"]= req.body.AmountPaid,
+          AcountObj["TotalAmount"]= processData[0].TotalAmount
+          AcountObj["DueAmount"]=DueAmount
+          AcountObj["AccountID"]=uniqId
+         
+        }else{
+          AcountObj["Status"]="pending"
+          AcountObj["GSTNumber"]=req.body.GSTNumber,
+          AcountObj["Name"]= req.body.Name,
+          AcountObj["AmountPaid"]= req.body.AmountPaid,
+          AcountObj["TotalAmount"]=processData[0].TotalAmount
+          AcountObj["DueAmount"]=DueAmount
+          AcountObj["AccountID"]=uniqId
+
+        }
+        console.log(AcountObj,"*******")
+        AccounData= new AccountData(AcountObj)
+
+    
+       
+    } catch (e) {
+      console.log(e)
+
+    }
+    try{
+      await AccounData.save()
+     
+      }catch(e){
+        console.log(e)
+
+      }
+
+
+    try {
+      saveData = await ProcessInvoice.updateMany({ _id: req.body._id }, {
+        $set: {
+          Status: "completed"
+          , AmountPaid: req.body.AmountPaid, DueAmount: DueAmount
+        }
+
+      })
+      res.send("Data is Saved")
+
+    
+
+    } catch (e) {
+      console.log(e)
+
+    }
+
+   
+
 
   } else {
 
-       
-    
+
+
     console.log(req.body, "4125")
 
-    var price=[]
-    var quantity=[]
-    var Amount=[]
-    var TotaAmount=0;
-    var TotalQuatity=0;
-    req.body.InvoiceProduct.map((i)=>{
-      
-    let num = Number(i.Price)
-    let quanti = Number(i.Quantity)
+    var price = []
+    var quantity = []
+    var Amount = []
+    var TotaAmount = 0;
+    var TotalQuatity = 0;
+    req.body.InvoiceProduct.map((i) => {
 
-    price.push(num)
-    quantity.push(quanti)
-    let amt = num * quanti
-    Amount.push(amt)
+      let num = Number(i.Price)
+      let quanti = Number(i.Quantity)
+
+      price.push(num)
+      quantity.push(quanti)
+      let amt = num * quanti
+      Amount.push(amt)
 
     })
 
@@ -485,27 +602,29 @@ app.post('/savequoteData', async (req, res) => {
       TotaAmount = TotaAmount + Amount[i]
       TotalQuatity = TotalQuatity + quantity[i]
     }
-     let data=req.body
-     data["TotalAmount"]=TotaAmount
-     data["TotalQuatity"]=TotalQuatity
-     
+    let data = req.body
+    data["TotalAmount"] = TotaAmount
+    data["TotalQuatity"] = TotalQuatity
+
+    console.log(data, "4545741")
 
     saveData = new ProcessInvoice(data)
-   }
-
-
-  try {
-    if (req.body.Status !== "Completed") {
+    try {
+      // if (req.body.Status !== "Completed") {
       await saveData.save()
+
+
+      res.status(200).send("submitted ")
+
+
+    } catch (e) {
+      console.log(e)
+
     }
-
-    res.status(200).send("submitted ")
-
-
-  } catch (e) {
-    console.log(e)
-
   }
+
+
+
 })
 
 // fething the pending items....
@@ -537,22 +656,96 @@ app.post("/removequote", async (req, res) => {
 
 //editInvoice....
 app.post("/editquote", async (req, res) => {
-  try {
-    
- const filterOption={
-  _id: req.body._id 
- }
- 
-   const UpdatedArray=req.body.InvoiceProduct
 
-   
-    const data = await ProcessInvoice.updateMany(filterOption,{$set:{InvoiceProduct:req.body.InvoiceProduct,GSTNumber:req.body.GSTNumber,Name:req.body.Name} })
-    console.log(data)
+
+  const filterOption = {
+    _id: req.body._id
+  }
+
+  //updating the Quatity of the Product...
+  try {
+    let arr = []
+    var dataArray = req.body.InvoiceProduct
+    console.log(req.body.InvoiceProduct, "1111****finalData*****")
+
+    for (const data of dataArray) {
+      const subfield = data.ProductUniqId;
+      const second = await uploadData.findOne({ ProductUniqId: subfield })
+      let num = Number(data.Quantity)
+      if (num > 0) {
+        if (second) {
+
+
+          if (second.quantity >= data.Quantity) {
+            let finalval = second.quantity - data.Quantity
+            const finalData = await uploadData.updateOne({ ProductUniqId: subfield }, { $set: { quantity: finalval } })
+            console.log(finalData, "****finalData*****")
+          } else {
+            res.send("Enter Amount Quatity is grater than Total Quatity")
+            throw new Error(
+              'Enter Amount Quatity is grater than Product')
+
+          }
+
+        }
+      }
+      else {
+        res.send("Please Enter the Quatity")
+        throw new Error(
+          'Please Enter the Quatity ')
+      }
+
+
+
+    }
+
+
+    var price = []
+    var quantity = []
+    var Amount = []
+    var TotaAmount = 0;
+    var TotalQuatity = 0;
+    req.body.InvoiceProduct.map((i) => {
+
+      let num = Number(i.Price)
+      let quanti = Number(i.Quantity)
+
+      price.push(num)
+      quantity.push(quanti)
+      let amt = num * quanti
+      Amount.push(amt)
+
+    })
+
+    for (let i = 0; i <= Amount.length - 1; i++) {
+      TotaAmount = TotaAmount + Amount[i]
+      TotalQuatity = TotalQuatity + quantity[i]
+    }
+
+    const UpdatedArray = req.body.InvoiceProduct
+
+    const data = await ProcessInvoice.updateMany(filterOption, {
+      $set: {
+        InvoiceProduct: req.body.InvoiceProduct,
+        GSTNumber: req.body.GSTNumber,
+        Name: req.body.Name,
+        TotalAmount: TotaAmount,
+        TotalQuatity: TotalQuatity
+      }
+    })
+    console.log("&&*&&*&UYTRECDF&&*&&*&", UpdatedArray, "&&*&&*&UYTRECDF&&*&&*&", data, "&&*&&*&UYTRECDF&&*&&*&")
     res.status(200).send("Edited Sucessfully")
 
+
   } catch (e) {
-      console.log(e)
+    console.log(e)
+
   }
+
+
+
+
+
 
 })
 
@@ -572,6 +765,11 @@ app.post("/getinvoiceData", async (req, res) => {
 
 })
 
+app.get("/getProductList", async (req, res) => {
+  const user = await uploadData.find({}, { product: 1, ProductUniqId: 1 });
+  res.send(user)
+})
+
 
 //getCompleted Invoice
 
@@ -584,9 +782,69 @@ app.get("/GenearatedInvoice", async (req, res) => {
 
   }
 })
-//store data..
-// app.post("post")
 
+// get Account Data...
+
+app.post("/getAccounts",async(req,res)=>{
+  // const data = await ProcessInvoice.find({ Status: "completed" } ,{ AmountPaid: 1, 
+  //   TotalAmount: 1,GSTNumber: 1,Name:1 
+  //   ,DueAmount:1} )
+  console.log(req.body)
+  const data= await AccountData.find({ Status: req.body.status })
+  res.send(data)
+
+})
+
+app.post('/updateAccount',async(req,res)=>{
+    console.log(req.body)
+    const data= await AccountData.findOne({ AccountID: req.body.AccountID })
+     let initAmount=Number(data.AmountPaid)
+     let newAmount=Number( req.body.PaidAmount)
+     let Total=Number( data.TotalAmount)
+    let finalAmount=initAmount+ newAmount
+     let DueAmount= Total-finalAmount
+       if(DueAmount === 0){
+        const data1= await AccountData.updateMany({ AccountID: req.body.AccountID },
+          {$set:{Status:"completed"}})
+          res.send(data1)
+       }else{
+       const data1= await AccountData.updateMany({ AccountID: req.body.AccountID },
+        {$set:{AmountPaid:finalAmount,DueAmount:DueAmount}})
+        console.log(data1)
+        res.send(data1)
+       }
+
+
+
+})
+
+
+app.post("/createuserforAdmin",async(req,res)=>{
+  const uniqId = uuid.v4()
+    let reqbody={
+      custmeruniqId:uniqId,
+      ...req.body
+
+    }
+  const data = new CustmoreDetailsData(reqbody)
+  console.log(req.body)
+
+  try{
+    await data.save()
+    res.send(data)
+
+  }catch(e){
+    console.log(e)
+
+  }
+
+})
+  
+
+app.get("/username",async(req,res)=>{
+  const data = await CustmoreDetailsData.find({})
+  res.send(data)
+})
 
 
 
