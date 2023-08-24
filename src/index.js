@@ -52,15 +52,6 @@ app.use(express.json());
  const mongoURL=process.env.MongodbURL
 
 
-//for prod DB.....
-
-
-// for Dev DB ....
-//const mongoURL='mongodb://localhost:27017/eshop'
-// console.log(mongoURL)
-// console.log(mongoURL)
-//'mongodb://localhost:27017/eshop'
-//DB Connection....
 mongoose.connect(mongoURL, {useNewUrlParser: true});
 var connection = mongoose.connection;
 connection.on('connected', function() {
