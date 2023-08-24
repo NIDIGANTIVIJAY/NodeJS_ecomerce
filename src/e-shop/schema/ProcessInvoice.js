@@ -24,6 +24,10 @@ const ProcessInvoice = new mongoose.Schema({
       uniquie:true
       
     },
+    DueAmount:{
+      type: String,
+      trim: true,
+    },
   Status: {
     type: String,
     trim: true,
@@ -40,9 +44,28 @@ const ProcessInvoice = new mongoose.Schema({
     require: true,
   },
 
+  
+  address: {
+    type: String,
+    trim: true,
+   
+  },
+  phonenumber: {
+    type: String,
+    trim: true,
+   
+  },
+  
+
 
   InvoiceProduct:[  
+
+  
     {
+      ProductUniqId :{
+        type:String,
+        trim:true,
+      },
     ProductId:{
       type:String,
       trim:true,
@@ -90,6 +113,9 @@ const ProcessInvoice = new mongoose.Schema({
   } 
 
    }]
+
+
+
   
 
 });

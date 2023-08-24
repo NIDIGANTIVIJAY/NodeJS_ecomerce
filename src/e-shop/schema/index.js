@@ -5,10 +5,14 @@ const productData = new mongoose.Schema({
     imageData:{
         type:Buffer
     },
+    ProductUniqId:{
+      type:String,
+      trim:true,
+    },
     productId:{
       type:String,
       trim:true,
-      require:true,
+      
       uniquie:true
       
     },

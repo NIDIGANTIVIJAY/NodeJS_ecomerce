@@ -25,73 +25,111 @@
     <title>AMW Quetation</title>
 
     <style>
-.wrapper{
-    outline: 2px solid;
-    margin: 2rem;
-    padding: 2rem;
-}
-.header{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-.logotext{
-    font-size: 40px;
-}
-
-.taxtext{
-    font-size: 44px;
-    width: 200px;
-    text-align: center;
-}
-table{
-    font-size: 15px;
-    width: 100%;
-    border-collapse: collapse;
-   
-}
-
-.table1{
-    width: 300px;
-}
-
-.table1 th{
-    width: 50%;
-
-}
-th, td, tr{
-    border: 1px solid #2c2c32;
-    padding: 5px 10px;
-}
-
-.bodytr td{
-    text-align: left;
-}
-
-thead, tfoot{
-    background-color: #9898a5;
-}
-
-
-.tablelast th, .tablelast td{
-    width: 11%;
-}
-
-.trtag tr{
-    border: none;
-}
-    </style>
+        .wrapperInvoice{
+            outline: 2px solid;
+            margin: 2rem;
+            padding: 2rem;
+        }
+        .headerInvoice{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size:20px;
+        }
+        .logotext, .taxtext{
+            font-size: 30px;
+        }
+        
+        /* .taxtext{
+            font-size: 24px;
+            width: 200px;
+            text-align: center;
+        } */
+        table{
+            font-size: 15px;
+            width: 100%;
+            border-collapse: collapse;
+           
+        }
+        
+        .table1{
+            width: 300px;
+        }
+        
+        .table1 th{
+            width: 50%;
+        
+        }
+        th, td, tr{
+            border: 1px solid #2c2c32;
+            padding: 5px 10px;
+        }
+        
+        .bodytr td{
+            text-align: left;
+        }
+        table thead tr, table tfoot tr {
+            background-color: #9898a5 !important;
+        }
+        
+        
+        .tablelast th, .tablelast td{
+            width: 11%;
+        }
+        
+        .trtag tr{
+            border: none;
+        }
+        
+        @media screen and (max-width: 600px) {
+            body{
+                font-size: 14px;
+            }
+        
+            .wrapperInvoice{
+            outline: none;
+            margin: 0rem;
+            padding: 0rem;
+            }
+        
+            .headerInvoice{
+                font-size: 12px;
+            }
+        
+            .logotext, .taxtext{
+            font-size: 20px;
+        }
+        
+        .table1{
+            width: 170px;
+        }
+        
+        table th, table td {
+            padding: 1px 4px;
+            font-weight: 100;
+        }
+            
+        }
+        
+        /* @media screen and (min-width: 769px) {
+            body{
+                font-size: 16px;
+            }
+            
+        } */
+        
+            </style>
 </head>
 <body>
-   <div class="wrapper">
+   <div class="wrapperInvoice">
 
-    <div class="header">
+    <div class="headerInvoice">
         <div><img src="../public/amwlogo.png" alt="amwlogo"></div>
         <div class="logotext"><p>AAKASH METAL WORKS</p></div>
         <div class="taxtext"><p>Tax Invoice</p></div>
     </div>
 
-    <div class="header">
+    <div class="headerInvoice">
         <p style="font-size: 20px;">AAKASH METAL WORKS <br>
         [+919936098290], aakashmetalworks@gmail.com <br>
         108,Chandanpura ,Kopaganj <br>
