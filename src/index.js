@@ -58,7 +58,7 @@ app.use(express.json());
 
 // for Dev DB ....
 //const mongoURL='mongodb://localhost:27017/eshop'
-console.log(mongoURL)
+// console.log(mongoURL)
 // console.log(mongoURL)
 //'mongodb://localhost:27017/eshop'
 //DB Connection....
