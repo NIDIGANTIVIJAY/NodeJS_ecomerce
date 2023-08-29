@@ -44,6 +44,12 @@ const ProcessInvoice = new mongoose.Schema({
     require: true,
   },
 
+
+  vehicalNumber:{
+    type: String,
+    trim: true
+  },
+
   
   address: {
     type: String,

@@ -12,11 +12,12 @@ var nodemailer = require('nodemailer');
 const { type } = require("os");
 const uuid = require('uuid')
 const app = express();
-const AccountData =require("../e-shop/schema/AccountSchema")
-const CustmoreDetailsData=require("../e-shop/schema/customerDetails")
-
+const AccountData = require("../e-shop/schema/AccountSchema")
+const CustmoreDetailsData = require("../e-shop/schema/customerDetails")
+var converter = require('number-to-words');
 app.use(bodyParser.json());
 console.log("In Routers");
+const productionData = require("../e-shop/schema/ProductionData")
 
 app.use(
   bodyParser.urlencoded({
@@ -109,9 +110,95 @@ app.post("/getData", async (req, res) => {
   } catch (e) { }
 });
 
+// app.post("/upload/data", upload.single("imageData"), async (req, res) => {
+//   console.log(req);
+//   const uniqId = uuid.v4()
+//   let obj = {
+//     imageData: "",
+//     description: "",
+//     price: "",
+//     item: "",
+//     product: "",
+//     size: "",
+//     weight: "",
+//     quantity: "",
+//     productId: "",
+//     ProductUniqId: ""
+//   };
+
+//   try {
+//     if (req.file.buffer !== undefined) {
+//       obj["imageData"] = req.file.buffer
+//     }
+//     obj["description"] = req.body.description
+//     obj["price"] = req.body.price
+//     obj["item"] = req.body.item
+//     obj["product"] = req.body.product
+//     obj["size"] = req.body.size
+//     obj["weight"] = req.body.weight
+//     obj["quantity"] = req.body.quantity
+//     obj["productId"] = req.body.productId
+//     obj["ProductUniqId"] = uniqId
+
+//     console.log(obj)
+//     const user = new uploadData(obj);
+//     await user.save();
+//     res.send("Product saved successfuly ")
+//   } catch (e) {
+
+
+//     console.log(e)
+//   }
+// });
+
+
+
 app.post("/upload/data", upload.single("imageData"), async (req, res) => {
-  console.log(req);
+  console.log(req.body)
   const uniqId = uuid.v4()
+
+
+  const currentDate = new Date();
+  const currentYear = currentDate.getFullYear();
+  const currentMonth = currentDate.getMonth() + 1;
+
+  let mainArr = []
+  let yearArr = []
+  let monthArr = []
+
+
+  let mainObj = {}
+  let yearObj = {}
+  let monthobj = {}
+
+  //initial - second object 
+  monthobj["month"] = currentMonth.toString()
+  monthArr.push(monthobj)
+
+
+
+  //initial 1- object....
+  yearObj["year"] = currentYear.toString()
+  yearObj["monthArray"] = monthArr
+
+  // initial two objects
+  yearArr.push(yearObj)
+  console.log("Initial-1 object", yearObj)
+  console.log("Initial-2 object", monthArr)
+
+  console.log("****FINAL-ARRAY", yearArr)
+  mainObj["yearArray"] = yearArr
+  console.log("****FINAl-MainARRAY", mainObj)
+  mainArr.push(mainObj)
+
+
+  console.log(mainArr, "&&&&&")
+
+
+
+
+
+
   let obj = {
     imageData: "",
     description: "",
@@ -121,8 +208,9 @@ app.post("/upload/data", upload.single("imageData"), async (req, res) => {
     size: "",
     weight: "",
     quantity: "",
-    productId: "",
-    ProductUniqId: ""
+    ProductUniqId: "",
+    Hsno: "",
+    DailyProdDataArray: []
   };
 
   try {
@@ -136,11 +224,12 @@ app.post("/upload/data", upload.single("imageData"), async (req, res) => {
     obj["size"] = req.body.size
     obj["weight"] = req.body.weight
     obj["quantity"] = req.body.quantity
-    obj["productId"] = req.body.productId
-    obj["ProductUniqId"] = uniqId
+    obj["Hsno"] = req.body.Hsno
+    obj["ProductUniqId"] = uniqId,
+      obj["DailyProdDataArray"] = mainArr,
 
-    console.log(obj)
-    const user = new uploadData(obj);
+      console.log(obj)
+    const user = new productionData(obj);
     await user.save();
     res.send("Product saved successfuly ")
   } catch (e) {
@@ -148,6 +237,16 @@ app.post("/upload/data", upload.single("imageData"), async (req, res) => {
 
     console.log(e)
   }
+
+
+
+
+
+
+
+
+
+
 });
 
 //........URL Data Amid can only Access this page Pending......
@@ -358,7 +457,7 @@ app.post('/getquote', async (req, res) => {
 
   let date = new Date()
   let dateday = date.getDate()
-  let dateMonth = date.getMonth()
+  let dateMonth = date.getMonth() + 1
   let dateYear = date.getFullYear()
   let todayDate = dateday + '/' + dateMonth + "/" + dateYear;
   let price = []
@@ -396,13 +495,51 @@ app.post('/getquote', async (req, res) => {
   let Name;
   let phonenumber;
   let address;
-  // console.log(req.body)
+  let vehicalNumber;
+  let InvoiceNumber;
+  let SGST;
+  let CGST;
+  let TotalTAX;
+  let payableAmount;
+
+
+  const amount = TotaAmount;
+  const percentage = 9;
+
+  const result = (percentage / 100) * amount;
+  SGST = result.toFixed(2)
+  CGST = result.toFixed(2)
+
+  TotalTAX = Number(SGST) + Number(CGST)
+
+
+
+  payableAmount = TotaAmount + TotalTAX
+
+  let wordsData = converter.toWords(payableAmount)
+
+
+
+
   if (req?.body?.Status !== "initiate") {
 
     GSTNumber = req.body.GSTNumber
     Name = req.body.Name
-    phonenumber=req.body.phonenumber
-    address=req.body.address
+    phonenumber = req.body.phonenumber
+    address = req.body.address
+    vehicalNumber = req.body.vehicalNumber
+    try {
+      const data = await ProcessInvoice.countDocuments()
+
+      InvoiceNumber = `AMW-${data + 1}/23-24`
+      console.log(InvoiceNumber, data, "IKLKHH")
+
+    }
+    catch (e) {
+      console.log(e)
+    }
+
+
   }
 
   console.log(GSTNumber, Name)
@@ -436,8 +573,14 @@ app.post('/getquote', async (req, res) => {
         GSTNumber,
         Name,
         phonenumber,
-        address
-
+        address,
+        vehicalNumber,
+        InvoiceNumber,
+        CGST,
+        TotalTAX,
+        SGST,
+        payableAmount,
+        wordsData
 
 
       });
@@ -456,6 +599,12 @@ app.post('/getquote', async (req, res) => {
         Amount,
         TotaAmount,
         TotalQuatity,
+        InvoiceNumber,
+        CGST,
+        TotalTAX,
+        SGST,
+        payableAmount,
+        wordsData
 
 
       });
@@ -512,47 +661,47 @@ app.post('/savequoteData', async (req, res) => {
     try {
 
       processData = await ProcessInvoice.find({ _id: req.body._id })
-      console.log(processData,"&*JUNJJ",processData[0].TotalAmount , req.body. AmountPaid)
-      DueAmount = processData[0].TotalAmount - req.body. AmountPaid
-       
-      console.log(DueAmount,"DueAmount")
-      let AcountObj={}
+      console.log(processData, "&*JUNJJ", processData[0].TotalAmount, req.body.AmountPaid)
+      DueAmount = processData[0].TotalAmount - req.body.AmountPaid
+
+      console.log(DueAmount, "DueAmount")
+      let AcountObj = {}
       const uniqId = uuid.v4()
-        if(DueAmount === 0){
-          AcountObj["Status"]="completed"
-          AcountObj["GSTNumber"]=req.body.GSTNumber,
-          AcountObj["Name"]= req.body.Name,
-          AcountObj["AmountPaid"]= req.body.AmountPaid,
-          AcountObj["TotalAmount"]= processData[0].TotalAmount
-          AcountObj["DueAmount"]=DueAmount
-          AcountObj["AccountID"]=uniqId
-         
-        }else{
-          AcountObj["Status"]="pending"
-          AcountObj["GSTNumber"]=req.body.GSTNumber,
-          AcountObj["Name"]= req.body.Name,
-          AcountObj["AmountPaid"]= req.body.AmountPaid,
-          AcountObj["TotalAmount"]=processData[0].TotalAmount
-          AcountObj["DueAmount"]=DueAmount
-          AcountObj["AccountID"]=uniqId
+      if (DueAmount === 0) {
+        AcountObj["Status"] = "completed"
+        AcountObj["GSTNumber"] = req.body.GSTNumber,
+          AcountObj["Name"] = req.body.Name,
+          AcountObj["AmountPaid"] = req.body.AmountPaid,
+          AcountObj["TotalAmount"] = processData[0].TotalAmount
+        AcountObj["DueAmount"] = DueAmount
+        AcountObj["AccountID"] = uniqId
 
-        }
-        console.log(AcountObj,"*******")
-        AccounData= new AccountData(AcountObj)
+      } else {
+        AcountObj["Status"] = "pending"
+        AcountObj["GSTNumber"] = req.body.GSTNumber,
+          AcountObj["Name"] = req.body.Name,
+          AcountObj["AmountPaid"] = req.body.AmountPaid,
+          AcountObj["TotalAmount"] = processData[0].TotalAmount
+        AcountObj["DueAmount"] = DueAmount
+        AcountObj["AccountID"] = uniqId
 
-    
-       
+      }
+      console.log(AcountObj, "*******")
+      AccounData = new AccountData(AcountObj)
+
+
+
     } catch (e) {
       console.log(e)
 
     }
-    try{
+    try {
       await AccounData.save()
-     
-      }catch(e){
-        console.log(e)
 
-      }
+    } catch (e) {
+      console.log(e)
+
+    }
 
 
     try {
@@ -565,14 +714,14 @@ app.post('/savequoteData', async (req, res) => {
       })
       res.send("Data is Saved")
 
-    
+
 
     } catch (e) {
       console.log(e)
 
     }
 
-   
+
 
 
   } else {
@@ -668,36 +817,36 @@ app.post("/editquote", async (req, res) => {
     var dataArray = req.body.InvoiceProduct
     console.log(req.body.InvoiceProduct, "1111****finalData*****")
 
-    for (const data of dataArray) {
-      const subfield = data.ProductUniqId;
-      const second = await uploadData.findOne({ ProductUniqId: subfield })
-      let num = Number(data.Quantity)
-      if (num > 0) {
-        if (second) {
+    // for (const data of dataArray) {
+    //   const subfield = data.ProductUniqId;
+    //   const second = await uploadData.findOne({ ProductUniqId: subfield })
+    //   let num = Number(data.Quantity)
+    //   if (num > 0) {
+    //     if (second) {
 
 
-          if (second.quantity >= data.Quantity) {
-            let finalval = second.quantity - data.Quantity
-            const finalData = await uploadData.updateOne({ ProductUniqId: subfield }, { $set: { quantity: finalval } })
-            console.log(finalData, "****finalData*****")
-          } else {
-            res.send("Enter Amount Quatity is grater than Total Quatity")
-            throw new Error(
-              'Enter Amount Quatity is grater than Product')
+    //       if (second.quantity >= data.Quantity) {
+    //         let finalval = second.quantity - data.Quantity
+    //         const finalData = await uploadData.updateOne({ ProductUniqId: subfield }, { $set: { quantity: finalval } })
+    //         console.log(finalData, "****finalData*****")
+    //       } else {
+    //         res.send("Enter Amount Quatity is grater than Total Quatity")
+    //         throw new Error(
+    //           'Enter Amount Quatity is grater than Product')
 
-          }
+    //       }
 
-        }
-      }
-      else {
-        res.send("Please Enter the Quatity")
-        throw new Error(
-          'Please Enter the Quatity ')
-      }
+    //     }
+    //   }
+    //   else {
+    //     res.send("Please Enter the Quatity")
+    //     throw new Error(
+    //       'Please Enter the Quatity ')
+    //   }
 
 
 
-    }
+    // }
 
 
     var price = []
@@ -785,66 +934,425 @@ app.get("/GenearatedInvoice", async (req, res) => {
 
 // get Account Data...
 
-app.post("/getAccounts",async(req,res)=>{
+app.post("/getAccounts", async (req, res) => {
   // const data = await ProcessInvoice.find({ Status: "completed" } ,{ AmountPaid: 1, 
   //   TotalAmount: 1,GSTNumber: 1,Name:1 
   //   ,DueAmount:1} )
   console.log(req.body)
-  const data= await AccountData.find({ Status: req.body.status })
+  const data = await AccountData.find({ Status: req.body.status })
   res.send(data)
 
 })
 
-app.post('/updateAccount',async(req,res)=>{
-    console.log(req.body)
-    const data= await AccountData.findOne({ AccountID: req.body.AccountID })
-     let initAmount=Number(data.AmountPaid)
-     let newAmount=Number( req.body.PaidAmount)
-     let Total=Number( data.TotalAmount)
-    let finalAmount=initAmount+ newAmount
-     let DueAmount= Total-finalAmount
-       if(DueAmount === 0){
-        const data1= await AccountData.updateMany({ AccountID: req.body.AccountID },
-          {$set:{Status:"completed"}})
-          res.send(data1)
-       }else{
-       const data1= await AccountData.updateMany({ AccountID: req.body.AccountID },
-        {$set:{AmountPaid:finalAmount,DueAmount:DueAmount}})
-        console.log(data1)
-        res.send(data1)
-       }
+app.post('/updateAccount', async (req, res) => {
+  console.log(req.body)
+  const data = await AccountData.findOne({ AccountID: req.body.AccountID })
+  let initAmount = Number(data.AmountPaid)
+  let newAmount = Number(req.body.PaidAmount)
+  let Total = Number(data.TotalAmount)
+  let finalAmount = initAmount + newAmount
+  let DueAmount = Total - finalAmount
+  if (DueAmount === 0) {
+    const data1 = await AccountData.updateMany({ AccountID: req.body.AccountID },
+      { $set: { Status: "completed" } })
+    res.send(data1)
+  } else {
+    const data1 = await AccountData.updateMany({ AccountID: req.body.AccountID },
+      { $set: { AmountPaid: finalAmount, DueAmount: DueAmount } })
+    console.log(data1)
+    res.send(data1)
+  }
 
 
 
 })
 
 
-app.post("/createuserforAdmin",async(req,res)=>{
+app.post("/createuserforAdmin", async (req, res) => {
   const uniqId = uuid.v4()
-    let reqbody={
-      custmeruniqId:uniqId,
-      ...req.body
+  let reqbody = {
+    custmeruniqId: uniqId,
+    ...req.body
 
-    }
+  }
   const data = new CustmoreDetailsData(reqbody)
   console.log(req.body)
 
-  try{
+  try {
     await data.save()
     res.send(data)
 
-  }catch(e){
+  } catch (e) {
     console.log(e)
 
   }
 
 })
-  
 
-app.get("/username",async(req,res)=>{
+
+app.get("/username", async (req, res) => {
   const data = await CustmoreDetailsData.find({})
   res.send(data)
 })
+
+//Add the Production Stock
+app.post("/createStock", async (req, res) => {
+  console.log(req.body, "414")
+
+  const uniqId = uuid.v4()
+  const currentDate = new Date();
+  const currentYear = currentDate.getFullYear();
+  const currentMonth = currentDate.getMonth() + 1;
+
+  let mainArr = []
+  let yearArr = []
+  let monthArr = []
+
+
+  let mainObj = {}
+  let yearObj = {}
+  let monthobj = {}
+
+  //initial - second object 
+  monthobj["month"] = currentMonth.toString()
+  monthArr.push(monthobj)
+
+
+
+  //initial 1- object....
+  yearObj["year"] = currentYear.toString()
+  yearObj["monthArray"] = monthArr
+
+  // initial two objects
+  yearArr.push(yearObj)
+  console.log("Initial-1 object", yearObj)
+  console.log("Initial-2 object", monthArr)
+
+  console.log("****FINAL-ARRAY", yearArr)
+  mainObj["yearArray"] = yearArr
+  console.log("****FINAl-MainARRAY", mainObj)
+  mainArr.push(mainObj)
+
+
+  console.log(mainArr, "&&&&&")
+  let obj = {
+    stockId: uniqId,
+    DailyProdDataArray: mainArr,
+    ...req.body
+  }
+  let data = new productionData(obj)
+
+
+  try {
+    await data.save()
+    res.send("Data is Saved")
+
+  } catch (e) {
+
+  }
+})
+
+//Get the Production Stock
+app.get("/getStock", async (req, res) => {
+  console.log(req.body, "414")
+
+
+
+  try {
+    let data = await productionData.find({})
+
+    res.send(data)
+
+  } catch (e) {
+
+  }
+})
+
+
+// Daily Production Data
+app.post("/submitDailyReport", async (req, res) => {
+  try {
+    const newData = req.body;
+    console.log(newData, "LL")
+
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    const currentMonth = currentDate.getMonth() + 1;
+
+
+
+    const updatePromises = newData.map(async (item) => {
+      const filter = { ProductUniqId: item.ProductUniqId };
+
+
+
+
+      const monthPresent = await productionData.find(
+        {
+          'DailyProdDataArray.yearArray': {
+            $elemMatch: {
+              year: item.year,
+              'monthArray.month': item.Month
+            }
+          }
+        })
+      const Stock = await productionData.find({ "ProductUniqId": item.ProductUniqId })
+
+      console.log("CURRENTSTOCK", Stock.AvailableStock)
+      const CURRENTSTOCK = Stock.AvailableStock
+
+      const datePresent = await productionData.find(
+        {
+          "ProductUniqId": item.ProductUniqId,
+          'DailyProdDataArray.yearArray': {
+            $elemMatch: {
+              year: item.year,
+              'monthArray.month': item.Month,
+              'monthArray.datesArray.date': item.MonthDates
+
+            }
+          }
+        })
+
+      console.log(datePresent, "datesPresent")
+
+
+
+
+      let updateOptions
+      //adding the month
+      if (monthPresent.length === 0) {
+
+        let montharr = []
+        let monthobj = {}
+        monthobj["month"] = item.Month
+        montharr.push(monthobj)
+
+        const result = await productionData.updateMany({}, {
+          $push: {
+            "DailyProdDataArray.$[].yearArray.$[].monthArray": montharr
+          }
+        })
+        console.log(result)
+
+      }
+
+
+
+
+
+      if (datePresent.length > 0) {
+        console.log("IN DATES Upadtaing ---------")
+
+        //updating the new value for Date
+        CURRENTSTOCK = Number(CURRENTSTOCK) - Number(Stock.currentprodData);
+
+        updateOptions = {
+          $set: {
+
+
+            "DailyProdDataArray.$[].yearArray.$[yearElem].monthArray.$[monthElem].datesArray.$[dateElem].prodData": item.todayProd,
+            AvailableStock: CURRENTSTOCK
+          },
+
+
+        };
+        const arrayFilters = [
+          { "yearElem.year": item.year },
+          { "monthElem.month": item.Month },
+          { 'dateElem.date': item.MonthDates }
+
+        ];
+
+        const result = await productionData.updateMany(filter, updateOptions, {
+          arrayFilters,
+        });
+        return result;
+
+
+
+      } else {
+
+        console.log("IN DATES ADDING ---------")
+        // adding the new Dates
+        updateOptions = {
+          $push: {
+            "DailyProdDataArray.$[].yearArray.$[yearElem].monthArray.$[monthElem].datesArray": {
+              date: item.MonthDates,
+              prodData: item.todayProd,
+            },
+
+
+          },
+          $set: {
+            AvailableStock: Number(CURRENTSTOCK) + Number(item.todayDate),
+            currentprodData: item.todayDate
+          }
+        };
+
+        const arrayFilters = [
+          { "yearElem.year": item.year },
+          { "monthElem.month": item.Month },
+
+        ];
+
+        const result = await productionData.updateMany(filter, updateOptions, {
+          arrayFilters,
+        });
+        return result;
+
+      }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    });
+
+    const updateResults = await Promise.all(updatePromises);
+
+    res.json(updateResults);
+  } catch (error) {
+    console.error("Error adding documents:", error);
+    res.status(500).send("An error occurred while adding documents.");
+  }
+});
+
+//on Date change for Daily Production
+
+app.post("/dateChange", async (req, res) => {
+  console.log(req.body)
+  let newElementToAdd = []
+  let monthArr = []
+  let mainObj = {}
+  let monthObj = {}
+
+
+  monthObj["month"] = req.body.month
+  monthArr.push(monthObj)
+
+
+  mainObj["year"] = req.body.year
+  mainObj["monthArray"] = monthArr
+
+
+  newElementToAdd.push(mainObj)
+  console.log(newElementToAdd)
+
+  try {
+    const result = await productionData.updateMany({}, {
+      $push: {
+        "DailyProdDataArray.$[].yearArray": newElementToAdd
+      }
+    });
+    res.send(result)
+
+  } catch (e) {
+    console.log(e)
+  }
+})
+
+
+//Dashboard Api
+
+app.get("/Dashboard", async (req, res) => {
+  try {
+    const data = await productionData.find({}, 'DailyProdDataArray')
+    console.log(data)
+    res.send(data)
+
+  } catch (error) {
+
+  }
+}
+)
+
+//Dispatch Api..
+
+app.post("/dispatch", async (req, res) => {
+  console.log(req.body)
+  const targetStockId = req.body.stockId;
+  let finalProductionData;
+  let finalDispatch;
+
+  const result = await productionData.findOne({ stockId: targetStockId }, "DailyProdDataArray.yearArray.monthArray.datesArray");
+  if (result) {
+    const datesArray = result.DailyProdDataArray.flatMap(year => year.yearArray.flatMap(month => month.monthArray.flatMap(day => day.datesArray)));
+    console.log("Dates Array:", datesArray);
+    datesArray.forEach(element => {
+      if (element.date === req.body.MonthDates) {
+
+
+        finalProductionData = Number(element.prodData) - Number(req.body.DispatchAmount);
+        finalDispatch = Number(element.Dispatch) + Number(req.body.DispatchAmount);
+      }
+
+    });
+  } else {
+    console.log("Stock ID not found.");
+  }
+
+  console.log(finalProductionData, "final")
+
+
+
+  try {
+
+
+    console.log(finalProductionData, "KKIJHH")
+    const filter = { stockId: req.body.stockId };
+
+    const updateOptions = {
+      $set: {
+        "DailyProdDataArray.$[].yearArray.$[yearElem].monthArray.$[monthElem].datesArray.$[dateElem].prodData": finalProductionData,
+        "DailyProdDataArray.$[].yearArray.$[yearElem].monthArray.$[monthElem].datesArray.$[dateElem].Dispatch": finalDispatch
+      },
+    };
+
+    const arrayFilters = [
+      { "yearElem.year": req.body.year },
+      { "monthElem.month": req.body.month },
+      { "dateElem.date": req.body.MonthDates },
+    ];
+
+    const result = await productionData.updateOne(filter, updateOptions, {
+      arrayFilters,
+    });
+
+    console.log(result);
+    res.send(result)
+
+
+  } catch (error) {
+
+  }
+
+  try {
+
+
+  } catch (error) {
+
+  }
+
+
+
+
+})
+
+
+
+
+
+
+
 
 
 
