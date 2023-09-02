@@ -116,10 +116,6 @@ const ProductionData = new mongoose.Schema({
     type: Number,
     trim: true,
   },
-  quantity: {
-    type: Number,
-    trim: true,
-  },
 
   ProductUniqId: {
     type: String,

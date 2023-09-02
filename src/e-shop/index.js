@@ -35,20 +35,20 @@ const UserSchema = new mongoose.Schema(
         }
       },
     },
-    phonenumber: {
-      type: String,
-      trim: true,
-      required: true,
-    },
-    address:{
-      type:String,
-      trim: true,
-      required:true
-    },
-    city:{
-      type:String,
-      trim:true
-    },
+    // phonenumber: {
+    //   type: String,
+    //   trim: true,
+    //   required: true,
+    // },
+    // address:{
+    //   type:String,
+    //   trim: true,
+    //   required:true
+    // },
+    // city:{
+    //   type:String,
+    //   trim:true
+    // },
     admin: {
       type: Boolean,
       default: true,
@@ -86,7 +86,7 @@ UserSchema.methods.generateAuthToken = async function () {
 UserSchema.statics.findByCredentials = async (email, password) => {
   const user = await User.findOne({ email });
   // console.log(email, password, user.password);
-  console.log(user);
+  console.log(user,"email is present");
   if (!user) {
     //error
     console.log("Email Id is not Found");
@@ -107,6 +107,7 @@ UserSchema.statics.findByCredentials = async (email, password) => {
 //hash pain text...
 UserSchema.pre("save", async function (next) {
   const user = this;
+  console.log(user,"BEFORE")
   if (user.flag === false) {
     this.password = await bycrypt.hash(this.password, 8);
       

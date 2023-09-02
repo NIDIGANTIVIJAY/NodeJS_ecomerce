@@ -38,6 +38,24 @@ Name: {
 type: String,
 trim: true,
 require: true,
+},
+vehicalNumber:{
+  type: String,
+trim: true,
+require: true,
+
+}
+,
+InvoiceNumber:{
+  type: String,
+  trim: true,
+  require: true,
+},
+InvoiceGeneratedDate:{
+  type: String,
+  trim: true,
+  require: true,
+
 }
 
 

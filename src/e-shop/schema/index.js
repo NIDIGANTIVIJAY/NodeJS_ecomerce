@@ -52,8 +52,14 @@ const productData = new mongoose.Schema({
   quantity: {
     type: Number,
     trim: true,
-    require: true,
+    default:0
   },
+  Hsno:{
+    type: Number,
+    trim: true,
+    require: true,
+
+  }
 
 
 

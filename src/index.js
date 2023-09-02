@@ -49,12 +49,11 @@ app.use(express.json());
 //   res.status(503).send("site is under maintenace")
 // })
 
-// const mongoURL=process.env.MongodbURL
+ const mongoURL=process.env.MongodbURL
 
 
 //for prod DB.....
 
- const mongoURL=process.env.MongodbURL + "AMW_PROD_Collection"
 
 // for Dev DB ....
 //const mongoURL='mongodb://localhost:27017/eshop'
