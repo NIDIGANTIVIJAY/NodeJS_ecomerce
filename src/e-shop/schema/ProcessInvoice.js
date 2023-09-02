@@ -62,7 +62,16 @@ const ProcessInvoice = new mongoose.Schema({
    
   },
   
+  
+  InvoiceNumber:{
+    type: String,
+    trim: true,
 
+  },
+  InvoiceGeneratedDate:{
+    type: String,
+    trim: true,
+  },
 
   InvoiceProduct:[  
 
