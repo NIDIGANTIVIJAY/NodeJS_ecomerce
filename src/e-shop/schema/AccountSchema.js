@@ -56,6 +56,28 @@ InvoiceGeneratedDate:{
   trim: true,
   require: true,
 
+},
+PaymentType:{
+  type: String,
+  trim: true,
+
+},
+AmountEMI:[{
+  date:{
+    type: String,
+    trim: true,
+  },
+  AmountPaid:{
+    type: String,
+    trim: true,
+
+  }
+
+}],
+InitialPaidAmount:{
+  type: String,
+  trim: true,
+
 }
 
 

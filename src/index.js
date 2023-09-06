@@ -49,15 +49,24 @@ app.use(express.json());
 //   res.status(503).send("site is under maintenace")
 // })
 
- const mongoURL=process.env.MongodbURL
+//  const mongoURL=process.env.MongodbURL
 
 
+//for prod DB.....
+const mongoURL="mongodb+srv://asabhi1997:hTwzvWbYRnAeFvD2@cluster1.9f9ijip.mongodb.net/" + "AMW_PROD_Collection"
+
+
+// for Dev DB ....
+//const mongoURL='mongodb://localhost:27017/eshop'
+// console.log(mongoURL)
+// console.log(mongoURL)
+//'mongodb://localhost:27017/eshop'
+//DB Connection....
 mongoose.connect(mongoURL, {useNewUrlParser: true});
 var connection = mongoose.connection;
 connection.on('connected', function() {
     console.log('database is connected successfully');
 });
-
 
 
 
