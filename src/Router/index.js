@@ -624,7 +624,7 @@ const ejsImgPath = path.join(parentDirectory,"views");
 const imgPath = path.join(ejsImgPath,"image","amwlogo.png");
 
 
-let imageUrl="http://localhost:3000/logo"
+let imageUrl="http://16.16.112.129:4000/logo"
 console.log(imageUrl,"imgURL")
 
   try {
