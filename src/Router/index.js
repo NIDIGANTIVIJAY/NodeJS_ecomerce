@@ -388,7 +388,7 @@ app.post('/sendEmail', async (req, res) => {
     to: 'amw.aakashmetal2022@gmail.com',
     subject: 'Custmore information',
     text: 'Hi',
-    html: "<b>Phone number:</b>" + `${req.body.phno}` + `<b>Desc:</b> ${req.body.desc}`
+    html: "<b>Phone number:</b>" + `${req.body.phno}` + `<b>Desc:</b> ${req.body.desc}` + `<b>NAme:</b> ${req.body?.name}`
   };
   transporter.sendMail(mailOptions, function (error, info) {
     if (error) {
