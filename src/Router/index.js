@@ -2,11 +2,12 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const jwt = require("jsonwebtoken");
 const auth = require("../../src/middleware/auth");
-const { error, log } = require("console");
+const { error } = require("console");
 const multer = require("multer");
 const puppeteer = require('puppeteer');
 const ejs = require('ejs');
 const path = require('path');
+require('dotenv').config()
 //schema for the userSignup..
 const userSchema = require("../e-shop/index");
 const uploadData = require("../e-shop/schema/index");
@@ -749,92 +750,25 @@ console.log(imageUrl,"imgURL")
     }
 
     
-    // const browser = await puppeteer.launch({
-    //   headless: 'new'
-    // }
-    // );
-    // const page = await browser.newPage();
-  
-    // // Read the .ejs file content
-  
-  
-    // // Set the content of the page with your HTML content
-    // await page.setContent(html);
-  
-    // // Generate a PDF
-    // const pdfBuffer = await page.pdf();
-  
-    // // Convert the PDF to Base64
-    // const base64PDF = pdfBuffer.toString('base64');
-  
-    // // Set the content type to application/pdf
-    // const base64PDFWithContentType = `data:application/pdf;base64,${base64PDF}`;
-  
-    // console.log(base64PDFWithContentType);
-
-
-
-
-
-  
-    // Launch a headless Chrome browser instance (or adjust options as needed)
-    // const browser = await puppeteer.launch({ headless: true }); // Or 'new' for chromium
-    const pathToExtension = path.join(process.cwd(), 'my-extension');
-    console.log(pathToExtension);
-    const browser = await puppeteer.launch({
-      headless: 'new',
-      args: [
-        `--disable-extensions-except=${pathToExtension}`,
-        `--load-extension=${pathToExtension}`,
-      ],
-    });
-
-    // Create a new page
+    const browser = await puppeteer.launch();
     const page = await browser.newPage();
-
-    // Read the EJS file content (assuming a separate function or method)
-
-
-    // Set the content of the page with the EJS-rendered HTML
-    await page.setContent(html);
-
-    // Generate a PDF buffer
-    const pdfBuffer = await page.pdf();
-
-    // Convert the PDF buffer to Base64-encoded string
-    const base64PDF = Buffer.from(pdfBuffer).toString('base64');
-
-    // Construct the complete Base64-encoded data URI with content type
-    const base64PDFWithContentType = `data:application/pdf;base64,${base64PDF}`;
-
-    // Handle success (e.g., send the Base64-encoded PDF to the client)
-    // console.log('PDF generated successfully:', base64PDFWithContentType);
-
-    // Close the browser
-    await browser.close();
   
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
-
-
-
-
-
-
+    // Read the .ejs file content
+  
+  
+    // Set the content of the page with your HTML content
+    await page.setContent(html);
+  
+    // Generate a PDF
+    const pdfBuffer = await page.pdf();
+  
+    // Convert the PDF to Base64
+    const base64PDF = pdfBuffer.toString('base64');
+  
+    // Set the content type to application/pdf
+    const base64PDFWithContentType = `data:application/pdf;base64,${base64PDF}`;
+  
+    console.log(base64PDFWithContentType);
 
 
     res.send(base64PDFWithContentType)
@@ -2337,7 +2271,16 @@ let imageUrl="http://localhost:3000/logo"
           });
      console.log(html,"HTLML")
 
-     const browser = await puppeteer.launch();
+     const browser = await puppeteer.launch({
+      args:[
+        "--disable-setuid-sandbox",
+        "--single-process",
+        "--no-sandbox",
+        "--no-zygote"
+      ],
+      executablePath:process.env.PUPPETEER_EXECUTABLE_PATH
+
+     });
      const page = await browser.newPage();
    
      // Read the .ejs file content
