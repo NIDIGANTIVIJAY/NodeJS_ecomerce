@@ -49,16 +49,15 @@ app.use(express.json());
 //   res.status(503).send("site is under maintenace")
 // })
 
-//  const mongoURL=process.env.MongodbURL
+  const mongoURL=process.env.MongodbURL 
 
 
 //for prod DB.....
-const mongoURL="mongodb+srv://asabhi1997:hTwzvWbYRnAeFvD2@cluster1.9f9ijip.mongodb.net/" + "AMW_PROD_Collection"
+//const mongoURL="mongodb+srv://amwaakashmetal2022:SayG9Pz3VSzA1D3U@cluster0.nte8cju.mongodb.net/" + "AMW_PROD_Collection"
 
 
 // for Dev DB ....
-//const mongoURL='mongodb://localhost:27017/eshop'
-// console.log(mongoURL)
+console.log(mongoURL,"KKKK")
 // console.log(mongoURL)
 //'mongodb://localhost:27017/eshop'
 //DB Connection....
