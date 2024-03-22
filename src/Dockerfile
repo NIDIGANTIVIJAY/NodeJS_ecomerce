@@ -18,4 +18,4 @@ RUN npm ci
 COPY . .
 
 # Command to run your application
-CMD ["node", "src/index.js"]
+CMD ["node", "index.js"]
