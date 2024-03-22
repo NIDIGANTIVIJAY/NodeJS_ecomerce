@@ -1,7 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const jwt = require("jsonwebtoken");
-const auth = require("../../src/middleware/auth");
+const auth = require("../middleware/auth");
 const { error } = require("console");
 const multer = require("multer");
 const puppeteer = require('puppeteer');
