@@ -625,8 +625,8 @@ const ejsImgPath = path.join(parentDirectory,"views");
 const imgPath = path.join(ejsImgPath,"image","amwlogo.png");
 
 
-let imageUrl="http://16.16.112.129:4000/logo"
-console.log(imageUrl,"imgURL")
+let imageUrl="NodeJS_ecomerce\src\public\amwlogo.png"
+console.log(imageUrl,req?.body?.Status,"imgURL")
 
   try {
 
@@ -754,6 +754,7 @@ console.log(imageUrl,"imgURL")
     const page = await browser.newPage();
   
     // Read the .ejs file content
+    // await page.goto(url, { timeout: 60000 });
   
   
     // Set the content of the page with your HTML content
@@ -777,7 +778,7 @@ console.log(imageUrl,"imgURL")
     await browser.close();
 
   } catch (e) {
-    console.log(e, "ONGF")
+    console.log(e , "Error getqoute")
   }
 
 
