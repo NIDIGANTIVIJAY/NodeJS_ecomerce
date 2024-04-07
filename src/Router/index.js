@@ -1269,9 +1269,10 @@ app.post("/edit/customer/Details",auth,async(req,res)=>{
 })
 
 app.post("/removecoustmer",auth,async(req,res)=>{
+  console.log(req.body.custmeruniqId)
   try{
     const data = await CustmoreDetailsData.deleteOne({ custmeruniqId: req.body.custmeruniqId })
-    res.status(200).send("Record Removed Sucessfully")
+    res.status(200).send("Record Removed Sucessfully",data)
   }catch(e){
        console.log(e)
   }
