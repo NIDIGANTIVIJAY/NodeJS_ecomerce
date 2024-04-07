@@ -1269,7 +1269,7 @@ app.post("/edit/customer/Details",auth,async(req,res)=>{
 })
 
 app.post("/removecoustmer",auth,async(req,res)=>{
-  console.log(req.body.custmeruniqId,"uniqID")
+  console.log(req.body,req.body.custmeruniqId,"uniqID")
   try{
     const data = await CustmoreDetailsData.deleteOne({ custmeruniqId: req.body.custmeruniqId })
     console.log(data,"DATA REMOVED")
