@@ -74,33 +74,33 @@ app.post("/user/login", async (req, res) => {
       req.body.password
     );
     console.log(user, "UYT")
-    try{
+    try {
       if (user !== "Email Id is not Found" && user !== "Wrong Password") {
 
         const token = user?.generateAuthToken();
         console.log(token, "token");
         res.status(200).send({ user });
-      }else{
-          if(user === "Email Id is not Found"){
-            res.status(401).send(`Enter Email is incorrect`)
+      } else {
+        if (user === "Email Id is not Found") {
+          res.status(401).send(`Enter Email is incorrect`)
 
-          }else{
-            res.status(401).send(`Enter Password is incorrect`)
+        } else {
+          res.status(401).send(`Enter Password is incorrect`)
 
-          }
+        }
 
 
       }
-      
-      
-      
 
-    }catch(e){
+
+
+
+    } catch (e) {
       console.log(e)
       res.status(401).send("something went wrong")
 
     }
-  
+
 
   } catch (e) {
     console.log("SFG", e);
@@ -404,7 +404,7 @@ app.post('/sendEmail', async (req, res) => {
 
 
 // Edit the Admin Data...
-app.post('/edit/:id', auth,async (req, res) => {
+app.post('/edit/:id', auth, async (req, res) => {
   console.log(req.params.id)
 
 
@@ -437,7 +437,7 @@ app.post('/edit/:id', auth,async (req, res) => {
 })
 
 // Edit the Production Data...
-app.post('/editData',auth, async (req, res) => {
+app.post('/editData', auth, async (req, res) => {
   console.log(req.body)
 
 
@@ -475,13 +475,13 @@ app.post('/editData',auth, async (req, res) => {
 
 
 //Get Quotation Template...
-app.post('/getquote',auth, async (req, res) => {
+app.post('/getquote', auth, async (req, res) => {
   // console.log(req.body,req.body.status)
   // const productId=req.params.query.split(',')
   const productId = req.body.productIdArr
 
 
-  console.log(productId,"PROTUCR ARR")
+  console.log(productId, "PROTUCR ARR")
   let obj = {};
   let uploadData;
   // const user = await uploadData.find({
@@ -504,7 +504,7 @@ app.post('/getquote',auth, async (req, res) => {
   //       }
   //     }
   //   })
-      
+
   // })
   // if(vald){
   //   res.send(`Enter Quatity more than Production Stock :-${validquatity} Enter Quatity:- ss${enterQuatity}`)
@@ -512,7 +512,7 @@ app.post('/getquote',auth, async (req, res) => {
   // }
 
   obj = req.body.InvoiceProduct
-     
+
   console.log(obj, "KKKKK")
 
 
@@ -572,12 +572,12 @@ app.post('/getquote',auth, async (req, res) => {
   CGST = result.toFixed(2)
 
   let temmpotalTAX = Number(SGST) + Number(CGST)
-     TotalTAX=temmpotalTAX.toFixed(2)
+  TotalTAX = temmpotalTAX.toFixed(2)
   // var number = 7.1;
   // var rounded = Math.ceil(number); // rounded will be 8
-  
 
-  payableAmount = Number( TotaAmount) + Number(TotalTAX)
+
+  payableAmount = Number(TotaAmount) + Number(TotalTAX)
 
   let wordsData = converter.toWords(payableAmount)
 
@@ -619,20 +619,20 @@ app.post('/getquote',auth, async (req, res) => {
   const currentDirectory = __dirname;
   const fs = require('fs');
 
-// Construct the path to the parent directory
-const parentDirectory = path.join(currentDirectory, '..');
-const ejsImgPath = path.join(parentDirectory,"views");
-const imgPath = path.join(ejsImgPath,"image","amwlogo.png");
+  // Construct the path to the parent directory
+  const parentDirectory = path.join(currentDirectory, '..');
+  const ejsImgPath = path.join(parentDirectory, "views");
+  const imgPath = path.join(ejsImgPath, "image", "amwlogo.png");
 
 
-let imageUrl="NodeJS_ecomerce\src\public\amwlogo.png"
-console.log(imageUrl,req?.body?.Status,"imgURL")
+  let imageUrl = "NodeJS_ecomerce\src\public\amwlogo.png"
+  console.log(imageUrl, req?.body?.Status, "imgURL")
 
   try {
 
     if (req?.body?.Status === "pending") {
 
-      const ejsTemplatePath = path.join(parentDirectory,"views","index.ejs");
+      const ejsTemplatePath = path.join(parentDirectory, "views", "index.ejs");
       // res.render("index", {
       //   obj,
       //   total,
@@ -661,44 +661,44 @@ console.log(imageUrl,req?.body?.Status,"imgURL")
 
       // });
 
-      html = await ejs.renderFile(ejsTemplatePath, 
+      html = await ejs.renderFile(ejsTemplatePath,
         {
-            obj,
-            total,
-            subTotal,
-            totalQuatity,
-            stateTax,
-            centralTax,
-            GrandTotal,
-            TotalGst,
-            todayDate,
-            Amount,
-            TotaAmount,
-            TotalQuatity,
-            GSTNumber,
-            Name,
-            phonenumber,
-            address,
-            vehicalNumber,
-            InvoiceNumber,
-            CGST,
-            TotalTAX,
-            SGST,
-            payableAmount,
-            wordsData,
-            imageUrl
-    
-    
-          });
+          obj,
+          total,
+          subTotal,
+          totalQuatity,
+          stateTax,
+          centralTax,
+          GrandTotal,
+          TotalGst,
+          todayDate,
+          Amount,
+          TotaAmount,
+          TotalQuatity,
+          GSTNumber,
+          Name,
+          phonenumber,
+          address,
+          vehicalNumber,
+          InvoiceNumber,
+          CGST,
+          TotalTAX,
+          SGST,
+          payableAmount,
+          wordsData,
+          imageUrl
 
 
-        
+        });
+
+
+
 
 
 
     } else {
       console.log(obj, "In Else")
-      const ejsTemplatePath = path.join(parentDirectory,"views","sendquote.ejs");
+      const ejsTemplatePath = path.join(parentDirectory, "views", "sendquote.ejs");
       // res.render("sendquote", {
       //   obj,
       //   total,
@@ -744,31 +744,31 @@ console.log(imageUrl,req?.body?.Status,"imgURL")
 
 
       });
-      
-    
-    
+
+
+
     }
 
-    
+
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
-  
+
     // Read the .ejs file content
     // await page.goto(url, { timeout: 60000 });
-  
-  
+
+
     // Set the content of the page with your HTML content
     await page.setContent(html);
-  
+
     // Generate a PDF
     const pdfBuffer = await page.pdf();
-  
+
     // Convert the PDF to Base64
     const base64PDF = pdfBuffer.toString('base64');
-  
+
     // Set the content type to application/pdf
     const base64PDFWithContentType = `data:application/pdf;base64,${base64PDF}`;
-  
+
     console.log(base64PDFWithContentType);
 
 
@@ -778,31 +778,31 @@ console.log(imageUrl,req?.body?.Status,"imgURL")
     await browser.close();
 
   } catch (e) {
-    console.log(e , "Error getqoute")
+    console.log(e, "Error getqoute")
   }
 
 
 })
 
 //get the input from  the Process Data to store...
-app.post('/savequoteData',auth, async (req, res) => {
+app.post('/savequoteData', auth, async (req, res) => {
   console.log(req.body, "FGRFRGR")
 
   var saveData;
   let processData
   let DueAmount
   var AccounData
-
+  var dataArray = req.body.InvoiceProduct
   if (req.body.Status === "Completed") {
 
 
     try {
       let arr = []
-      var dataArray = req.body.InvoiceProduct
+    
       for (const data of dataArray) {
         const subfield = data.ProductUniqId;
         const second = await uploadData.findOne({ ProductUniqId: subfield })
-        console.log(second, "41")
+        console.log(second, "4111",second.quantity >= data.Quantity)
         if (second) {
 
           if (second.quantity >= data.Quantity) {
@@ -918,8 +918,9 @@ app.post('/savequoteData',auth, async (req, res) => {
           }
           else {
 
-            res.send("Enter Amount Quatity is greater than Product")
+            res.status(400).send("Enter Amount Quatity is greater than Product")
             throw new Error("Enter Amount Quatity is grater than Product")
+         
           }
 
         }
@@ -943,7 +944,7 @@ app.post('/savequoteData',auth, async (req, res) => {
 
     try {
 
-    
+
 
 
       processData = await ProcessInvoice.find({ _id: req.body._id })
@@ -952,7 +953,7 @@ app.post('/savequoteData',auth, async (req, res) => {
 
       console.log(DueAmount, "DueAmount")
 
-    
+
 
       let AcountObj = {}
       const uniqId = uuid.v4()
@@ -967,8 +968,8 @@ app.post('/savequoteData',auth, async (req, res) => {
         AcountObj["vehicalNumber"] = processData[0].vehicalNumber
         AcountObj["InvoiceNumber"] = InvoiceNumber
         AcountObj["InvoiceGeneratedDate"] = todayDate1
-        AcountObj["PaymentType"]=req.body.PaymentType
-        AcountObj["InitialPaidAmount"]=req.body.AmountPaid
+        AcountObj["PaymentType"] = req.body.PaymentType
+        AcountObj["InitialPaidAmount"] = req.body.AmountPaid
 
       } else {
         AcountObj["Status"] = "pending"
@@ -981,8 +982,8 @@ app.post('/savequoteData',auth, async (req, res) => {
         AcountObj["vehicalNumber"] = processData[0].vehicalNumber
         AcountObj["InvoiceNumber"] = InvoiceNumber
         AcountObj["InvoiceGeneratedDate"] = todayDate1
-        AcountObj["PaymentType"]=req.body.PaymentType
-        AcountObj["InitialPaidAmount"]=req.body.AmountPaid
+        AcountObj["PaymentType"] = req.body.PaymentType
+        AcountObj["InitialPaidAmount"] = req.body.AmountPaid
 
 
 
@@ -1011,15 +1012,15 @@ app.post('/savequoteData',auth, async (req, res) => {
     try {
 
 
-        //  const sadata=await ProcessInvoice.updateOne({ _id: req.body._id },{$set:{
-        //   InvoiceNumber:InvoiceNumber
-        //  }})
+      //  const sadata=await ProcessInvoice.updateOne({ _id: req.body._id },{$set:{
+      //   InvoiceNumber:InvoiceNumber
+      //  }})
       saveData = await ProcessInvoice.updateMany({ _id: req.body._id }, {
         $set: {
           Status: "completed"
           , AmountPaid: req.body.AmountPaid, DueAmount: DueAmount,
-          InvoiceNumber:InvoiceNumber,
-          InvoiceGeneratedDate:todayDate1
+          InvoiceNumber: InvoiceNumber,
+          InvoiceGeneratedDate: todayDate1
         }
 
       })
@@ -1036,8 +1037,6 @@ app.post('/savequoteData',auth, async (req, res) => {
 
 
   } else {
-
-
 
     console.log(req.body, "4125")
 
@@ -1088,7 +1087,7 @@ app.post('/savequoteData',auth, async (req, res) => {
 })
 
 // fething the pending items....
-app.get("/getpendingquote",auth, async (req, res) => {
+app.get("/getpendingquote", auth, async (req, res) => {
   try {
     const data = await ProcessInvoice.find({ Status: "pending" })
     res.status(200).send(data)
@@ -1099,7 +1098,7 @@ app.get("/getpendingquote",auth, async (req, res) => {
 
 })
 //Remove the Pending Task...
-app.post("/removequote",auth, async (req, res) => {
+app.post("/removequote", auth, async (req, res) => {
   console.log(req.body, req.body.GST, "DDD")
   try {
     const data = await ProcessInvoice.deleteOne({ _id: req.body._id })
@@ -1115,7 +1114,7 @@ app.post("/removequote",auth, async (req, res) => {
 })
 
 //editInvoice....
-app.post("/editquote",auth, async (req, res) => {
+app.post("/editquote", auth, async (req, res) => {
 
 
   const filterOption = {
@@ -1209,7 +1208,7 @@ app.post("/editquote",auth, async (req, res) => {
 
 })
 
-app.post("/getinvoiceData", auth,async (req, res) => {
+app.post("/getinvoiceData", auth, async (req, res) => {
   try {
     let obj;
     const user = await uploadData.find({
@@ -1225,31 +1224,31 @@ app.post("/getinvoiceData", auth,async (req, res) => {
 
 })
 
-app.get("/getProductList", auth,async (req, res) => {
+app.get("/getProductList", auth, async (req, res) => {
   const user = await uploadData.find({}, { product: 1, ProductUniqId: 1 });
   res.send(user)
 })
 
-app.get('/logo',async(req,res)=>{
+app.get('/logo', async (req, res) => {
   const currentDirectory = __dirname;
-const parentDirectory = path.join(currentDirectory, '..');
-const ejsImgPath = path.join(parentDirectory,"views");
-const imgPath = path.join(ejsImgPath,"image","amwlogo.png");
+  const parentDirectory = path.join(currentDirectory, '..');
+  const ejsImgPath = path.join(parentDirectory, "views");
+  const imgPath = path.join(ejsImgPath, "image", "amwlogo.png");
 
 
-let imageUrl=imgPath
-    
-    res.sendFile(imgPath)
+  let imageUrl = imgPath
+
+  res.sendFile(imgPath)
 })
 
 //EDIT && Delete of Coustmer Data
 
-app.post("/edit/customer/Details",auth,async(req,res)=>{
+app.post("/edit/customer/Details", auth, async (req, res) => {
   const filterOption = {
     custmeruniqId: req.body.custmeruniqId
   }
-  console.log(req.body,"BODY DATA")
-  try{
+  console.log(req.body, "BODY DATA")
+  try {
 
     const data = await CustmoreDetailsData.updateMany(filterOption, {
       $set: {
@@ -1258,30 +1257,30 @@ app.post("/edit/customer/Details",auth,async(req,res)=>{
         phonenumber: req.body.phonenumber,
         address: req.body.address,
         city: req.body.city,
-        GstNumber:req.body.GstNumber
+        GstNumber: req.body.GstNumber
       }
     })
     res.status(200).send("Edited Sucessfully")
 
-  }catch{
+  } catch {
     console.log(e)
   }
 })
 
-app.post("/removecoustmer",auth,async(req,res)=>{
-  console.log(req.body,req.body.custmeruniqId,"uniqID")
-  try{
+app.post("/removecoustmer", auth, async (req, res) => {
+  console.log(req.body, req.body.custmeruniqId, "uniqID")
+  try {
     const data = await CustmoreDetailsData.deleteOne({ custmeruniqId: req.body.custmeruniqId })
-    console.log(data,"DATA REMOVED")
+    console.log(data, "DATA REMOVED")
     res.status(200).send("Record Removed Sucessfully")
-  }catch(e){
-       console.log(e)
+  } catch (e) {
+    console.log(e)
   }
 })
 
 //getCompleted Invoice
 
-app.get("/GenearatedInvoice",auth, async (req, res) => {
+app.get("/GenearatedInvoice", auth, async (req, res) => {
   try {
     const data = await ProcessInvoice.find({ Status: "completed" })
     res.send(data)
@@ -1293,7 +1292,7 @@ app.get("/GenearatedInvoice",auth, async (req, res) => {
 
 // get Account Data...
 
-app.post("/getAccounts", auth,async (req, res) => {
+app.post("/getAccounts", auth, async (req, res) => {
   // const data = await ProcessInvoice.find({ Status: "completed" } ,{ AmountPaid: 1, 
   //   TotalAmount: 1,GSTNumber: 1,Name:1 
   //   ,DueAmount:1} )
@@ -1303,8 +1302,8 @@ app.post("/getAccounts", auth,async (req, res) => {
 
 })
 
-app.post('/updateAccount', auth,async (req, res) => {
-  console.log(req.body,"POPOPOPO")
+app.post('/updateAccount', auth, async (req, res) => {
+  console.log(req.body, "POPOPOPO")
   const data = await AccountData.findOne({ AccountID: req.body.AccountID })
   let initAmount = Number(data.AmountPaid)
   let newAmount = Number(req.body.PaidAmount)
@@ -1318,11 +1317,13 @@ app.post('/updateAccount', auth,async (req, res) => {
   } else {
 
     const data1 = await AccountData.updateMany({ AccountID: req.body.AccountID },
-      { $set: { AmountPaid: finalAmount, DueAmount: DueAmount }
-     })
-     const data2 = await AccountData.updateMany({ AccountID: req.body.AccountID },
-      { $push: { AmountEMI: req.body.AmountEMI }
-     })
+      {
+        $set: { AmountPaid: finalAmount, DueAmount: DueAmount }
+      })
+    const data2 = await AccountData.updateMany({ AccountID: req.body.AccountID },
+      {
+        $push: { AmountEMI: req.body.AmountEMI }
+      })
     console.log(data1)
     res.send(data1)
   }
@@ -1332,7 +1333,7 @@ app.post('/updateAccount', auth,async (req, res) => {
 })
 
 
-app.post("/createuserforAdmin",auth, async (req, res) => {
+app.post("/createuserforAdmin", auth, async (req, res) => {
   const uniqId = uuid.v4()
   let reqbody = {
     custmeruniqId: uniqId,
@@ -1354,13 +1355,13 @@ app.post("/createuserforAdmin",auth, async (req, res) => {
 })
 
 
-app.get("/username",auth, async (req, res) => {
+app.get("/username", auth, async (req, res) => {
   const data = await CustmoreDetailsData.find({})
   res.send(data)
 })
 
 //Add the Production Stock
-app.post("/createStock",auth, async (req, res) => {
+app.post("/createStock", auth, async (req, res) => {
   console.log(req.body, "414")
 
   const uniqId = uuid.v4()
@@ -1419,7 +1420,7 @@ app.post("/createStock",auth, async (req, res) => {
 })
 
 //Get the Production Stock
-app.get("/getStock", auth,async (req, res) => {
+app.get("/getStock", auth, async (req, res) => {
   console.log(req.body, "414")
 
 
@@ -1436,7 +1437,7 @@ app.get("/getStock", auth,async (req, res) => {
 
 
 // Daily Production Data
-app.post("/submitDailyReport", auth,async (req, res) => {
+app.post("/submitDailyReport", auth, async (req, res) => {
   try {
     const newData = req.body;
     console.log(newData, "LL")
@@ -1475,7 +1476,7 @@ app.post("/submitDailyReport", auth,async (req, res) => {
         monthArr.push(monthObj)
 
 
-        mainObj["year"] =  item.year
+        mainObj["year"] = item.year
         mainObj["monthArray"] = item.Month
 
 
@@ -1488,14 +1489,14 @@ app.post("/submitDailyReport", auth,async (req, res) => {
               "DailyProdDataArray.$[].yearArray": newElementToAdd
             }
           });
-         
+
 
         } catch (e) {
           console.log(e)
         }
 
 
-      } 
+      }
 
 
       const monthPresent = await productionData.find(
@@ -1517,7 +1518,7 @@ app.post("/submitDailyReport", auth,async (req, res) => {
       //Updating the Current Stock..
       let CURRENTSTOCK;
       if (Stock.length > 0) {
-        console.log(Stock,"LKOBBBB")
+        console.log(Stock, "LKOBBBB")
         CURRENTSTOCK = Stock[0].AvailableStock;
         console.log(CURRENTSTOCK)
         console.log("CURRENTSTOCK", Stock, Stock[0].AvailableStock)
@@ -1724,7 +1725,7 @@ app.post("/submitDailyReport", auth,async (req, res) => {
 });
 
 //Update the Daily-Production
-app.post("/updateProduction", auth,async (req, res) => {
+app.post("/updateProduction", auth, async (req, res) => {
   try {
     const newData = req.body;
     console.log(newData, "LL")
@@ -1775,7 +1776,7 @@ app.post("/updateProduction", auth,async (req, res) => {
       //         "DailyProdDataArray.$[].yearArray": newElementToAdd
       //       }
       //     });
-         
+
 
       //   } catch (e) {
       //     console.log(e)
@@ -1820,40 +1821,40 @@ app.post("/updateProduction", auth,async (req, res) => {
             year: item.year,
             "monthArray.month": item.Month,
             "monthArray.datesArray.date": item.MonthDates,
-           
+
           }
         }
       })
-      
-      
-       // Replace with the Hsno you want to search for
 
-     const doc= await productionData.findOne(filter )
-  // Access the 'datesArray' for the first date in the first month of the first year
-  const datesArray = doc.DailyProdDataArray[0]?.yearArray[0]?.monthArray[0]?.datesArray;
-   let finalValue;
-  if (datesArray) {
-    datesArray.forEach((items)=>{
-      if(items.date === item.MonthDates){
-           let prevValue=Number( items.prodData)
-           let currentValue=Number(item.todayProd)
-           finalValue=prevValue - currentValue
 
+      // Replace with the Hsno you want to search for
+
+      const doc = await productionData.findOne(filter)
+      // Access the 'datesArray' for the first date in the first month of the first year
+      const datesArray = doc.DailyProdDataArray[0]?.yearArray[0]?.monthArray[0]?.datesArray;
+      let finalValue;
+      if (datesArray) {
+        datesArray.forEach((items) => {
+          if (items.date === item.MonthDates) {
+            let prevValue = Number(items.prodData)
+            let currentValue = Number(item.todayProd)
+            finalValue = prevValue - currentValue
+
+          }
+        })
+
+        console.log("Dates Array:", finalValue);
+      } else {
+        console.log("No Dates Array found for the specified document.");
       }
-    })
-       
-    console.log("Dates Array:", finalValue);
-  } else {
-    console.log("No Dates Array found for the specified document.");
-  }
 
 
 
 
-    
 
 
-    
+
+
 
       let updateOptions
       //adding the month
@@ -1888,9 +1889,9 @@ app.post("/updateProduction", auth,async (req, res) => {
 
         // Number(CURRENTSTOCK) + Number(item.todayProd)
 
-        let FinalQuatity=Number(CURRENTSTOCK) - finalValue
-        console.log(FinalQuatity,"SS")
-        
+        let FinalQuatity = Number(CURRENTSTOCK) - finalValue
+        console.log(FinalQuatity, "SS")
+
         let UserProductOptions = {
           $set: {
             quantity: FinalQuatity
@@ -1920,7 +1921,7 @@ app.post("/updateProduction", auth,async (req, res) => {
         });
 
         // userProduct Data
-        
+
 
 
         const user1 = await uploadData.updateMany(filter, UserProductOptions);
@@ -1932,8 +1933,8 @@ app.post("/updateProduction", auth,async (req, res) => {
 
 
 
-      } 
-      
+      }
+
       // else {
 
       //   console.log("IN DATES ADDING ---------")
@@ -2044,7 +2045,7 @@ app.post("/updateProduction", auth,async (req, res) => {
 
 //on year change for Daily Production
 
-app.post("/dateChange", auth,async (req, res) => {
+app.post("/dateChange", auth, async (req, res) => {
   console.log(req.body)
   let newElementToAdd = []
   let monthArr = []
@@ -2079,7 +2080,7 @@ app.post("/dateChange", auth,async (req, res) => {
 
 //Dashboard Api
 
-app.get("/Dashboard",auth, async (req, res) => {
+app.get("/Dashboard", auth, async (req, res) => {
   try {
     const data = await productionData.find({}, 'DailyProdDataArray')
     console.log(data)
@@ -2093,7 +2094,7 @@ app.get("/Dashboard",auth, async (req, res) => {
 
 //Dispatch Api..
 
-app.post("/dispatch",auth, async (req, res) => {
+app.post("/dispatch", auth, async (req, res) => {
   console.log(req.body)
   const targetStockId = req.body.stockId;
   let finalProductionData;
@@ -2166,9 +2167,9 @@ app.post("/dispatch",auth, async (req, res) => {
 
 
 
-app.post('/downloadInvoice', auth,async (req, res) => {
+app.post('/downloadInvoice', auth, async (req, res) => {
 
-  
+
   let obj = {};
 
   obj = req.body.InvoiceProduct
@@ -2204,8 +2205,8 @@ app.post('/downloadInvoice', auth,async (req, res) => {
   //   TotaAmount = TotaAmount + Amount[i]
   //   TotalQuatity = TotalQuatity + quantity[i]
   // }
-  TotaAmount=req.body.TotalAmount
-  TotalQuatity=req.body.TotalQuatity
+  TotaAmount = req.body.TotalAmount
+  TotalQuatity = req.body.TotalQuatity
 
 
   console.log(price, quantity, Amount, TotalQuatity)
@@ -2242,14 +2243,14 @@ app.post('/downloadInvoice', auth,async (req, res) => {
 
 
 
-  
 
-    GSTNumber = req.body.GSTNumber
-    Name = req.body.Name
-    phonenumber = req.body.phonenumber
-    address = req.body.address
-    vehicalNumber = req.body.vehicalNumber
-    InvoiceNumber = req.body.InvoiceNumber
+
+  GSTNumber = req.body.GSTNumber
+  Name = req.body.Name
+  phonenumber = req.body.phonenumber
+  address = req.body.address
+  vehicalNumber = req.body.vehicalNumber
+  InvoiceNumber = req.body.InvoiceNumber
 
   console.log(GSTNumber, Name)
   let total = "500"
@@ -2262,88 +2263,86 @@ app.post('/downloadInvoice', auth,async (req, res) => {
 
   //  console.log(req?.body?.Status ,"FFF")
 
-  
+
   const currentDirectory = __dirname;
   const fs = require('fs');
 
-// Construct the path to the parent directory
-const parentDirectory = path.join(currentDirectory, '..');
-const ejsTemplatePath = path.join(parentDirectory,"views","index.ejs");
-  console.log(parentDirectory,ejsTemplatePath)
+  // Construct the path to the parent directory
+  const parentDirectory = path.join(currentDirectory, '..');
+  const ejsTemplatePath = path.join(parentDirectory, "views", "index.ejs");
+  console.log(parentDirectory, ejsTemplatePath)
   const ejsTemplate = fs.readFileSync(ejsTemplatePath, 'utf8');
-let imageUrl="http://localhost:3000/logo"
+  let imageUrl = "http://localhost:3000/logo"
 
   try {
     // const html = ejs.render(ejsTemplate, { name: 'John' });
     let html
-    try{
-    html = await ejs.renderFile(ejsTemplatePath, 
+    try {
+      html = await ejs.renderFile(ejsTemplatePath,
         {
-            obj,
-            total,
-            subTotal,
-            totalQuatity,
-            stateTax,
-            centralTax,
-            GrandTotal,
-            TotalGst,
-            todayDate,
-            Amount,
-            TotaAmount,
-            TotalQuatity,
-            GSTNumber,
-            Name,
-            phonenumber,
-            address,
-            vehicalNumber,
-            InvoiceNumber,
-            CGST,
-            TotalTAX,
-            SGST,
-            payableAmount,
-            wordsData,
-            imageUrl
-    
-    
-          });
-     console.log(html,"HTLML")
-
-     const browser = await puppeteer.launch({
-      args:[
-        "--disable-setuid-sandbox",
-        "--single-process",
-        "--no-sandbox",
-        "--no-zygote"
-      ],
-      executablePath:process.env.PUPPETEER_EXECUTABLE_PATH
-
-     });
-     const page = await browser.newPage();
-   
-     // Read the .ejs file content
-   
-   
-     // Set the content of the page with your HTML content
-     await page.setContent(html);
-   
-     // Generate a PDF
-     const pdfBuffer = await page.pdf();
-   
-     // Convert the PDF to Base64
-     const base64PDF = pdfBuffer.toString('base64');
-   
-     // Set the content type to application/pdf
-     const base64PDFWithContentType = `data:application/pdf;base64,${base64PDF}`;
-   
-     console.log(base64PDFWithContentType);
+          obj,
+          total,
+          subTotal,
+          totalQuatity,
+          stateTax,
+          centralTax,
+          GrandTotal,
+          TotalGst,
+          todayDate,
+          Amount,
+          TotaAmount,
+          TotalQuatity,
+          GSTNumber,
+          Name,
+          phonenumber,
+          address,
+          vehicalNumber,
+          InvoiceNumber,
+          CGST,
+          TotalTAX,
+          SGST,
+          payableAmount,
+          wordsData,
+          imageUrl
 
 
-     res.send(base64PDFWithContentType)
+        });
+      console.log(html, "HTLML")
+
+      const browser = await puppeteer.launch({
+        args: [
+          "--disable-setuid-sandbox",
+          "--single-process",
+          "--no-sandbox",
+          "--no-zygote"
+        ],
+        executablePath: process.env.PUPPETEER_EXECUTABLE_PATH
+
+      });
+      const page = await browser.newPage();
+
+      // Read the .ejs file content
 
 
-     await browser.close();
-   
+      // Set the content of the page with your HTML content
+      await page.setContent(html);
 
+      // Generate a PDF
+      const pdfBuffer = await page.pdf();
+
+      // Convert the PDF to Base64
+      const base64PDF = pdfBuffer.toString('base64');
+
+      // Set the content type to application/pdf
+      const base64PDFWithContentType = `data:application/pdf;base64,${base64PDF}`;
+
+      console.log(base64PDFWithContentType);
+
+
+      res.send(base64PDFWithContentType)
+
+
+      await browser.close();
 
 
 
@@ -2351,51 +2350,53 @@ let imageUrl="http://localhost:3000/logo"
 
 
 
-    //  const base64Data = Buffer.from(html).toString('base64');
-
-    //  console.log(base64Data);
-
-    //  const browser = await puppeteer.launch({
-    //    headless: "new", // Opt into the new headless mode
-    //    // ...other options
-    //  });
-     
-    //  const page = await browser.newPage();
-    //  const s=await page.setContent(html, { waitUntil: 'networkidle0' });
-    //  console.log(s)
-
-  //    const r=await page.screenshot({ path: 'screenshot.png' });
-  // console.log(r)
-
-     
-     // Use page.setContent with waitUntil option
-    
-     
-  //    const pdfBuffer = await page.pdf();
-  // console.log(pdfBuffer)
-
-    //  await browser.close();
-
-    //  res.setHeader('Content-Type', 'application/pdf');
-    //  res.setHeader('Content-Disposition', 'attachment; filename=example.pdf');
-    //  res.send(base64Data);
 
 
+      //  const base64Data = Buffer.from(html).toString('base64');
+
+      //  console.log(base64Data);
+
+      //  const browser = await puppeteer.launch({
+      //    headless: "new", // Opt into the new headless mode
+      //    // ...other options
+      //  });
+
+      //  const page = await browser.newPage();
+      //  const s=await page.setContent(html, { waitUntil: 'networkidle0' });
+      //  console.log(s)
+
+      //    const r=await page.screenshot({ path: 'screenshot.png' });
+      // console.log(r)
+
+
+      // Use page.setContent with waitUntil option
+
+
+      //    const pdfBuffer = await page.pdf();
+      // console.log(pdfBuffer)
+
+      //  await browser.close();
+
+      //  res.setHeader('Content-Type', 'application/pdf');
+      //  res.setHeader('Content-Disposition', 'attachment; filename=example.pdf');
+      //  res.send(base64Data);
 
 
 
-    }catch(e){
+
+
+    } catch (e) {
       console.log(e)
 
     }
-   
-    
-   
-   
-    
-     
-      
-    
+
+
+
+
+
+
+
+
 
   } catch (e) {
     console.log(e, "ONGF")
