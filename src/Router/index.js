@@ -918,7 +918,7 @@ app.post('/savequoteData', auth, async (req, res) => {
           }
           else {
 
-            res.status(400).send("Enter Amount Quatity is greater than Product")
+            res.status(200).send("Enter Amount Quatity is greater than Product")
             throw new Error("Enter Amount Quatity is grater than Product")
          
           }
