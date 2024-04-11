@@ -2234,9 +2234,10 @@ app.post('/downloadInvoice', auth, async (req, res) => {
 
   TotalTAX = Number(SGST) + Number(CGST)
 
+   console.log(typeof(TotalTAX),typeof(TotaAmount),"TAXAXXX")
 
-
-  payableAmount = TotaAmount + TotalTAX
+  payableAmount = Number(TotaAmount) + Number(TotalTAX)
+  console.log(typeof(payableAmount),"TAXAXXX111")
 
   let wordsData = converter.toWords(payableAmount)
 
